@@ -15,18 +15,8 @@ namespace NaBatalhaDoCangaco.Entidades
         Pequeno
     }
 
-    public class Meteoro : IBaseObject
+    public class Meteoro : BaseObject<Main>
     {
-        public bool Enabled => true;
-        public int UpdateOrder => 0;
-        public int DrawOrder => 0;
-        public bool Visible => true;
-
-        public event EventHandler<EventArgs> EnabledChanged;
-        public event EventHandler<EventArgs> UpdateOrderChanged;
-        public event EventHandler<EventArgs> DrawOrderChanged;
-        public event EventHandler<EventArgs> VisibleChanged;
-
         public Vector2 Posicao { get; set; }
         private Vector2 _direcao = Vector2.One;
         public Vector2 Inercia { get; set; } = Vector2.Zero;
@@ -35,17 +25,22 @@ namespace NaBatalhaDoCangaco.Entidades
         protected EnumTipoMeteoro Tipo { get; set; }
         public float Rotacao { get; set; }
 
-        public Meteoro(EnumTipoMeteoro tipo)
+        public Meteoro(Game game) : base(game)
         {
-            Tipo = tipo;
+        }
+
+        public Meteoro(Game game, EnumTipoMeteoro e) 
+            : this(game)
+        {
+            Tipo = e;
         }
 
         internal void Destruir()
         {
-            Globals.Game.Components.Remove(this);
-            Globals.GetPlayer<Player>().Score++;
+            ThisGame.Components.Remove(this);
+            ThisGame.Player.Score++;
 
-            var gerador = Globals.GetGame<Main>().GeradorMeteoro;
+            var gerador = ThisGame.GeradorMeteoro;
 
             switch (Tipo)
             {
@@ -65,36 +60,32 @@ namespace NaBatalhaDoCangaco.Entidades
             var dist = MathF.Sqrt(dx * dx + dy * dy);
 
             return dist < raio;
-        }
+        }    
 
-        public void Initialize()
-        {
-        }
-
-        public void Update(GameTime gameTime)
+        public override void Update(GameTime gameTime)
         {
             var dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
             Posicao += Inercia * dt * Speed;
 
-            if (Posicao.X > Globals.Game.Window.ClientBounds.Width)
+            if (Posicao.X > ThisGame.Window.ClientBounds.Width)
                 Posicao = new Vector2(0, Posicao.Y);
             if (Posicao.X < 0)
-                Posicao = new Vector2(Globals.Game.Window.ClientBounds.Width, Posicao.Y);
+                Posicao = new Vector2(ThisGame.Window.ClientBounds.Width, Posicao.Y);
 
-            if (Posicao.Y > Globals.Game.Window.ClientBounds.Height)
+            if (Posicao.Y > ThisGame.Window.ClientBounds.Height)
                 Posicao = new Vector2(Posicao.X, 0);
             if (Posicao.Y < 0)
-                Posicao = new Vector2(Posicao.X, Globals.Game.Window.ClientBounds.Height);
+                Posicao = new Vector2(Posicao.X, ThisGame.Window.ClientBounds.Height);
 
             _direcao = _direcao.Rotate(Rotacao);
         }
 
-        public void Draw(GameTime gameTime)
+        public override void Draw(GameTime gameTime)
         {
             if (Texture == null)
                 return;
 
-            Globals.SpriteBatch.Draw(Texture, Posicao, null, Color.White, -_direcao.Angle(), new Vector2(Texture.Width / 2, Texture.Height / 2), 1f, SpriteEffects.None, 0);
+            ThisGame.SpriteBatch.Draw(Texture, Posicao, null, Color.White, -_direcao.Angle(), new Vector2(Texture.Width / 2, Texture.Height / 2), 1f, SpriteEffects.None, 0);
         }
     }
 }
