@@ -62,6 +62,9 @@ namespace NaBatalhaDoCangaco
 
             Player.Posicao = new Vector2(Window.ClientBounds.Width / 2, Window.ClientBounds.Height / 2);
 
+            Player.Inercia = Vector2.Zero;
+            Player.Direcao = Vector2.UnitX;
+
             Components.OfType<Meteoro>().ToList().ForEach(p => Components.Remove(p));
 
             GeradorMeteoro.Gerar(10);

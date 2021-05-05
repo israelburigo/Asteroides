@@ -12,6 +12,8 @@ namespace NaBatalhaDoCangaco.Entidades
 {
     public class Player : BaseObject<Main>
     {
+        public Vector2[] Bounds { get; set; }
+
         public Texture2D Texture { get; set; }
         public Texture2D TiroTexture { get; set; }
 
@@ -26,7 +28,7 @@ namespace NaBatalhaDoCangaco.Entidades
 
         private float _tempoTiro = 0;
 
-        public Player(Game game) 
+        public Player(Game game)
             : base(game)
         {
         }
@@ -53,6 +55,8 @@ namespace NaBatalhaDoCangaco.Entidades
 
             if (keys.Contains(Keys.Up))
                 Inercia += Direcao * dt * Aceleracao;
+            else if (keys.Contains(Keys.Down))
+                Inercia -= Direcao * dt * Aceleracao / 5;
 
             if (keys.Contains(Keys.Right))
                 Direcao = Direcao.Rotate(0.1f);
@@ -77,9 +81,18 @@ namespace NaBatalhaDoCangaco.Entidades
 
             Posicao += Inercia;
 
+            var angle = -Direcao.Angle();
+
+            Bounds = new[]
+            {
+                new Vector2(Posicao.X, Posicao.Y + Texture.Height/2).Rotate(angle, Posicao),
+                new Vector2(Posicao.X - Texture.Width/2, Posicao.Y - Texture.Height/2 ).Rotate(angle, Posicao),
+                new Vector2(Posicao.X + Texture.Width/2, Posicao.Y - Texture.Height/2 ).Rotate(angle, Posicao),
+            };
+
             var meteoros = ThisGame.Components.OfType<Meteoro>();
 
-            if (meteoros.Any(p => p.Contem(Posicao)))
+            if (meteoros.Any(p => p.Contem(Bounds)))
                 ThisGame.End();
         }
 

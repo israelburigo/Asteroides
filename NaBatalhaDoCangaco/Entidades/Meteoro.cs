@@ -87,5 +87,13 @@ namespace NaBatalhaDoCangaco.Entidades
 
             ThisGame.SpriteBatch.Draw(Texture, Posicao, null, Color.White, -_direcao.Angle(), new Vector2(Texture.Width / 2, Texture.Height / 2), 1f, SpriteEffects.None, 0);
         }
+
+        internal bool Contem(Vector2[] bounds)
+        {
+            foreach (var item in bounds)
+                if (Contem(item))
+                    return true;
+            return false;
+        }
     }
 }
