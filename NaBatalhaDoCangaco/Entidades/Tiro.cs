@@ -1,31 +1,31 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System.Linq;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using NaBatalhaDoCangaco;
 using NaBatalhaDoCangaco.Engine;
 using NaBatalhaDoCangaco.Engine.Extensions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
-namespace NaBatalhaDoCangaco.Entidades
+namespace Asteroides.Entidades
 {
     public class Tiro : BaseObject<Main>
     {
         public Player Player { get; set; }
         public Vector2 Posicao { get; set; }
         public Vector2 Direcao { get; set; }
+        public Texture2D Texture { get; set; }
 
         public Tiro(Game game) : base(game)
         {
+            Texture = game.Content.Load<Texture2D>("2d/tiro");
+            game.Components.Add(this);
         }
 
         public override void Draw(GameTime gameTime)
         {
-            if (Player.TiroTexture == null)
+            if (Texture == null)
                 return;
 
-            var texture = Player.TiroTexture;
-            ThisGame.SpriteBatch.Draw(texture, Posicao, null, Color.White, -Direcao.Angle(), new Vector2(texture.Width / 2, texture.Height / 2), 1f, SpriteEffects.None, 0);
+            ThisGame.SpriteBatch.Draw(Texture, Posicao, null, Color.White, -Direcao.Angle(), new Vector2(Texture.Width / 2, Texture.Height / 2), 1f, SpriteEffects.None, 0);
         }
 
         public override void Initialize()
@@ -36,7 +36,7 @@ namespace NaBatalhaDoCangaco.Entidades
         public override void Update(GameTime gameTime)
         {
             var dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
-            Posicao += Direcao * dt * 1000;
+            Posicao += Direcao * dt * 700;
 
             if (Posicao.X > ThisGame.Window.ClientBounds.Width || Posicao.X < 0)
                 ThisGame.Components.Remove(this);

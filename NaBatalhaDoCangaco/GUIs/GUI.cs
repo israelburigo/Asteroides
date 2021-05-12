@@ -2,7 +2,6 @@
 using Microsoft.Xna.Framework.Graphics;
 using NaBatalhaDoCangaco;
 using NaBatalhaDoCangaco.Engine;
-using NaBatalhaDoCangaco.Entidades;
 using System;
 using System.Collections.Generic;
 using System.Text;

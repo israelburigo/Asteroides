@@ -1,13 +1,10 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using NaBatalhaDoCangaco.Engine;
+using NaBatalhaDoCangaco;
 using NaBatalhaDoCangaco.Engine.Extensions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
-namespace NaBatalhaDoCangaco.Entidades
+namespace Asteroides.Entidades
 {
     public class GeradorMeteoro
     {

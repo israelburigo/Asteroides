@@ -3,9 +3,9 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using NaBatalhaDoCangaco.Engine;
-using NaBatalhaDoCangaco.Entidades;
 using System;
 using System.Linq;
+using Asteroides.Entidades;
 
 namespace NaBatalhaDoCangaco
 {
@@ -52,7 +52,6 @@ namespace NaBatalhaDoCangaco
         {
             SpriteBatch = new SpriteBatch(GraphicsDevice);
             Player.Texture = Content.Load<Texture2D>("2d/player");
-            Player.TiroTexture = Content.Load<Texture2D>("2d/tiro");
             Gui.SetFont(Content.Load<SpriteFont>("fonts/arial20"));
         }
 
