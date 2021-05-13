@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using Asteroides.Entidades.Armas;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -92,6 +93,26 @@ namespace Asteroides.Entidades
 
             if (meteoros.Any(p => p.Contem(Bounds)))
                 ThisGame.End();
+        }
+
+        internal bool Contem(Vector2[] bounds)
+        {
+            foreach (var item in bounds)
+                if (Contem(item))
+                    return true;
+            return false;
+        }
+
+        internal bool Contem(Vector2 v)
+        {
+            var raio = Texture.Width / 2;
+
+            var dx = Posicao.X - v.X;
+            var dy = Posicao.Y - v.Y;
+
+            var dist = MathF.Sqrt(dx * dx + dy * dy);
+
+            return dist < raio;
         }
     }
 }

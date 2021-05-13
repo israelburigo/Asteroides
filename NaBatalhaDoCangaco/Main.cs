@@ -14,12 +14,14 @@ namespace NaBatalhaDoCangaco
     {
         public Player Player { get; set; }
         public GeradorMeteoro GeradorMeteoro { get; set; }
+        public GeradorItem GeradorItem { get; set; }
         public GUI Gui { get; set; }
         public bool Started { get; private set; }
 
         public Main()
         {
             GeradorMeteoro = new GeradorMeteoro(this);
+            GeradorItem = new GeradorItem(this);
 
             Player = new Player(this);
             Components.Add(Player);
@@ -69,6 +71,7 @@ namespace NaBatalhaDoCangaco
             Window.Title = Components.Count.ToString();
 
             GeradorMeteoro.Gerar(gameTime);
+            GeradorItem.Gerar(gameTime);
         }
 
         protected override void Draw(GameTime gameTime)
