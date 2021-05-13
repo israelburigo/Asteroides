@@ -18,22 +18,9 @@ namespace Asteroides.Entidades.Armas
                 new Tiro(game)
                 {
                     Posicao = posicao,
-                    Direcao = direcao.Rotate(MathHelper.ToRadians(20*i))
+                    Direcao = direcao.Rotate(MathHelper.ToRadians(20 * i))
                 };
             }
-
-            //new Tiro(game)
-            //{
-            //    Posicao = posicao,
-            //    Direcao = direcao.Rotate(MathHelper.ToRadians(10))
-            //};
-
-            //new Tiro(game)
-            //{
-            //    Posicao = posicao,
-            //    Direcao = direcao.Rotate(MathHelper.ToRadians(-10))
-            //};
-
         }
     }
 }

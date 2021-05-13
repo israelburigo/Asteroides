@@ -72,22 +72,21 @@ namespace Asteroides.Entidades
             if (Posicao.Y < 0)
                 Posicao = new Vector2(Posicao.X, ThisGame.Window.ClientBounds.Height);
 
-            if (Keyboard.GetState().IsKeyDown(Keys.Space))
-                Arma.Atira(ThisGame, gameTime, Posicao, Direcao);
-
-            if (Keyboard.GetState().IsKeyUp(Keys.Space))
-                Arma.Reset();
-
-            Posicao += Inercia;
-
             var angle = -Direcao.Angle();
-
             Bounds = new[]
             {
                 new Vector2(Posicao.X, Posicao.Y + Texture.Height/2).Rotate(angle, Posicao),
                 new Vector2(Posicao.X - Texture.Width/2, Posicao.Y - Texture.Height/2 ).Rotate(angle, Posicao),
                 new Vector2(Posicao.X + Texture.Width/2, Posicao.Y - Texture.Height/2 ).Rotate(angle, Posicao),
             };
+
+            if (Keyboard.GetState().IsKeyDown(Keys.Space))
+                Arma.Atira(ThisGame, gameTime, Bounds.First(), Direcao);
+
+            if (Keyboard.GetState().IsKeyUp(Keys.Space))
+                Arma.Reset();
+
+            Posicao += Inercia;
 
             var meteoros = ThisGame.Components.OfType<Meteoro>();
 
