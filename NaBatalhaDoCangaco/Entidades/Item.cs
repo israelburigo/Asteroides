@@ -8,7 +8,7 @@ using NaBatalhaDoCangaco.Engine.Extensions;
 
 namespace Asteroides.Entidades
 {
-    public class Item : BaseObject<Main>
+    public class Item : ObjetoBase<Main>
     {
         public Player Player { get; set; }
         public Texture2D Texture { get; set; }

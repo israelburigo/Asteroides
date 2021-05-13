@@ -9,7 +9,7 @@ using System.Text;
 
 namespace Asteroides.GUIs
 {
-    public class ButtonStart : BaseObject<Main>
+    public class ButtonStart : ObjetoBase<Main>
     {
         public SpriteFont Font;
         public Rectangle Bounds { get; set; }

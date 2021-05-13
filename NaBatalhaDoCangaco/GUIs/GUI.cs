@@ -8,7 +8,7 @@ using System.Text;
 
 namespace Asteroides.GUIs
 {
-    public class GUI : BaseObject<Main>
+    public class GUI : ObjetoBase<Main>
     {
         public SpriteFont Font { get; set; }
         public string Score { get; set; }

@@ -10,7 +10,7 @@ using NaBatalhaDoCangaco.Engine.Extensions;
 
 namespace Asteroides.Entidades
 {
-    public class Player : BaseObject<Main>
+    public class Player : ObjetoBase<Main>
     {
         public Vector2[] Bounds { get; set; }
 

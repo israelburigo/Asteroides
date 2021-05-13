@@ -14,7 +14,7 @@ namespace Asteroides.Entidades
         Pequeno
     }
 
-    public class Meteoro : BaseObject<Main>
+    public class Meteoro : ObjetoBase<Main>
     {
         public Vector2 Posicao { get; set; }
         private Vector2 _direcao = Vector2.One;

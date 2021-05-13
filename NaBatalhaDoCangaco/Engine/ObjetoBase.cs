@@ -6,12 +6,12 @@ using System.Text;
 
 namespace NaBatalhaDoCangaco.Engine
 {
-    public abstract class BaseObject<T> : GameComponent, IDrawable
+    public abstract class ObjetoBase<T> : GameComponent, IDrawable
         where T : MainGame
     {
         protected T ThisGame;
 
-        protected BaseObject(Game game) 
+        protected ObjetoBase(Game game) 
             : base(game)
         {
             ThisGame = (T)game;

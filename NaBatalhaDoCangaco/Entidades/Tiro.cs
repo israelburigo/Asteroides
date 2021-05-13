@@ -9,7 +9,7 @@ using NaBatalhaDoCangaco.Engine.Extensions;
 
 namespace Asteroides.Entidades
 {
-    public class Tiro : BaseObject<Main>
+    public class Tiro : ObjetoBase<Main>
     {
         public Player Player { get; set; }
         public Vector2 Posicao { get; set; }
@@ -59,12 +59,15 @@ namespace Asteroides.Entidades
 
         private void CriaParticulas(Vector2 posicao)
         {
-            //new ParticlesObject<Main>(Game)
-            //{
-            //    Quant = 10,
-            //    DuracaoDasParticulas = new MinMax(0.3f,0.5f),
-            //    Posicao = posicao,
-            //};
+            new Particulas<Main>(Game)
+            {
+                Quant = new MinMax(5, 10),
+                DuracaoDasParticulas = new MinMax(0.5f, 1.0f),
+                Posicao = posicao,
+                Textura = ThisGame.Content.Load<Texture2D>("2d/particula"),
+                Angulo = new MinMax(0, 359),
+                Velocidade = new MinMax(10, 100),
+            }.Start();
         }
     }
 }

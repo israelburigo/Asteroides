@@ -25,15 +25,15 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="3.959798"
-     inkscape:cx="91.686561"
-     inkscape:cy="879.09756"
+     inkscape:zoom="11.2"
+     inkscape:cx="148.69028"
+     inkscape:cy="814.21133"
      inkscape:document-units="mm"
      inkscape:current-layer="layer1"
      showgrid="false"
      inkscape:window-width="1920"
      inkscape:window-height="1017"
-     inkscape:window-x="1912"
+     inkscape:window-x="-8"
      inkscape:window-y="-8"
      inkscape:window-maximized="1" />
   <metadata
@@ -105,6 +105,15 @@
        cy="65.477776"
        r="1.9019321"
        inkscape:export-filename="C:\Users\israel.burigo\Documents\CURSO_JOGO\NaBatalhaDoCangaco\NaBatalhaDoCangaco\Content\2d\arma2.png"
+       inkscape:export-xdpi="94"
+       inkscape:export-ydpi="94" />
+    <path
+       style="fill:none;stroke:#ffffff;stroke-width:0.3;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke fill markers"
+       d="m 36.53024,79.159726 0.629799,-0.400299 0.298564,0.491368 z"
+       id="path857"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cccc"
+       inkscape:export-filename="C:\Users\israel.burigo\Documents\CURSO_JOGO\NaBatalhaDoCangaco\NaBatalhaDoCangaco\Content\2d\particula.png"
        inkscape:export-xdpi="94"
        inkscape:export-ydpi="94" />
   </g>

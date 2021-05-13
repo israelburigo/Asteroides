@@ -8,25 +8,31 @@ using System.Text;
 
 namespace Asteroides.Engine.Components
 {
-    public class Particles<T> : BaseObject<T>
+    public class Particula<T> : ObjetoBase<T>
         where T : MainGame
     {
-        private readonly ParticlesObject<T> _parent;
-        private readonly Vector2 _direcao;
-        private float _duracao;
-        private float _velocidade;
-        private Vector2 _posicao;
+        private readonly Particulas<T> _parent;
+        private readonly Vector2 _direcao;        
+        private readonly float _velocidade;
         private readonly Texture2D _textura;
-        public bool Disposed { get; private set; }
+        private float _duracao;
+        private Vector2 _posicao;
 
-        public Particles(MainGame game, ParticlesObject<T> parent) 
-            : base(game)
+        public bool Done { get { return _duracao <= 0; } }
+
+        public Particula(MainGame game, Particulas<T> parent) 
+             : base(game)
         {
+            game.Components.Add(this);
+
             _parent = parent;
+
+            var angulo = _parent.Angulo?.RandomInt() ?? 1f;
+
             _velocidade = _parent.Velocidade?.Random() ?? 1f;
             _textura = parent.Textura;
             _duracao = _parent.DuracaoDasParticulas?.Random() ?? 1f;
-            _direcao = Vector2.One.Rotate(MathHelper.ToRadians(_parent.Angulo?.RandomInt() ?? 1f));
+            _direcao = Vector2.One.Rotate(MathHelper.ToRadians(angulo));
             _posicao = new Vector2(_parent.Posicao.X, _parent.Posicao.Y);
         }
 
@@ -41,16 +47,10 @@ namespace Asteroides.Engine.Components
         public override void Update(GameTime gameTime)
         {
             var dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
-
-            if (_parent.ComoRemover == EnumHowToRemoveParticles.PerTime)
-                Disposed = (_duracao -= dt) < 0;
-
-            if (_parent.ComoRemover == EnumHowToRemoveParticles.PerDistance)
-                Disposed = Vector2.Distance(_parent.Posicao, _posicao) > _parent.DistanciaMax;
-
+            
             _posicao += _direcao * _velocidade * dt;
 
-            if (Disposed)
+            if ((_duracao -= dt) < 0)
                 ThisGame.Components.Remove(this);
         }
 
