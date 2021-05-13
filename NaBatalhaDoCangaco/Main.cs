@@ -10,7 +10,7 @@ using Asteroides.Engine;
 
 namespace NaBatalhaDoCangaco
 {
-    public class Main : MainGame
+    public class Main : Game
     {
         public Player Player { get; set; }
         public GeradorMeteoro GeradorMeteoro { get; set; }
@@ -18,8 +18,13 @@ namespace NaBatalhaDoCangaco
         public GUI Gui { get; set; }
         public bool Started { get; private set; }
 
+        public GraphicsDeviceManager Graphics { get; set; }
+
         public Main()
         {
+            Graphics = new GraphicsDeviceManager(this);
+            Content.RootDirectory = "Content";
+
             GeradorMeteoro = new GeradorMeteoro(this);
             GeradorItem = new GeradorItem(this);
 
@@ -38,12 +43,16 @@ namespace NaBatalhaDoCangaco
             Graphics.PreferredBackBufferHeight = 1000;
 
             Graphics.ApplyChanges();
+
+            Globals.GameWindow = Window;
         }
 
         protected override void LoadContent()
         {
             base.LoadContent();
-            Player.Texture = Content.Load<Texture2D>("2d/player");
+
+            Globals.SpriteBatch = new SpriteBatch(GraphicsDevice);
+
             Gui.SetFont(Content.Load<SpriteFont>("fonts/arial20"));
         }
 
@@ -78,11 +87,11 @@ namespace NaBatalhaDoCangaco
         {
             GraphicsDevice.Clear(Color.Black);
 
-            SpriteBatch.Begin();
+            Globals.SpriteBatch.Begin();
 
             base.Draw(gameTime);
 
-            SpriteBatch.End();
+            Globals.SpriteBatch.End();
         }
 
         internal void End()

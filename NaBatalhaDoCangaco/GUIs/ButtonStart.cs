@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Asteroides.Engine;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using NaBatalhaDoCangaco;
@@ -35,7 +36,7 @@ namespace Asteroides.GUIs
             var h = ThisGame.Window.ClientBounds.Height / 2;
             var size = Font.MeasureString(txt);
             var pos = new Vector2(w - size.X / 2, h - size.Y / 2);
-            ThisGame.SpriteBatch.DrawString(Font, txt, pos, Color.White);
+            Globals.SpriteBatch.DrawString(Font, txt, pos, Color.White);
         }
 
         public override void Update(GameTime gameTime)

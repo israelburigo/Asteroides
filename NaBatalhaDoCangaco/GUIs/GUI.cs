@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Asteroides.Engine;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using NaBatalhaDoCangaco;
 using NaBatalhaDoCangaco.Engine;
@@ -22,8 +23,8 @@ namespace Asteroides.GUIs
 
         public override void Draw(GameTime gameTime)
         {
-            ThisGame.SpriteBatch.DrawString(Font, Score, new Vector2(10, 10), Color.White);
-            ThisGame.SpriteBatch.DrawString(Font, MaxScore, new Vector2(10, 50), Color.White);
+            Globals.SpriteBatch.DrawString(Font, Score, new Vector2(10, 10), Color.White);
+            Globals.SpriteBatch.DrawString(Font, MaxScore, new Vector2(10, 50), Color.White);
 
             Start.Draw(gameTime);
         }

@@ -9,7 +9,7 @@ using System.Text;
 namespace Asteroides.Engine.Components
 {
     public class Particula<T> : ObjetoBase<T>
-        where T : MainGame
+        where T : Game
     {
         private readonly Particulas<T> _parent;
         private readonly Vector2 _direcao;        
@@ -20,7 +20,7 @@ namespace Asteroides.Engine.Components
 
         public bool Done { get { return _duracao <= 0; } }
 
-        public Particula(MainGame game, Particulas<T> parent) 
+        public Particula(Game game, Particulas<T> parent) 
              : base(game)
         {
             game.Components.Add(this);
@@ -41,7 +41,7 @@ namespace Asteroides.Engine.Components
             if (_textura == null)
                 return;
 
-            ThisGame.SpriteBatch.Draw(_textura, _posicao, Color.White);
+            Globals.SpriteBatch.Draw(_textura, _posicao, Color.White);
         }
 
         public override void Update(GameTime gameTime)
@@ -51,7 +51,7 @@ namespace Asteroides.Engine.Components
             _posicao += _direcao * _velocidade * dt;
 
             if ((_duracao -= dt) < 0)
-                ThisGame.Components.Remove(this);
+                Game.Components.Remove(this);
         }
 
     }

@@ -9,7 +9,7 @@ namespace Asteroides.Engine.Components
 { 
 
     public class Particulas<T> : ObjetoBase<T>
-        where T : MainGame
+        where T : Game
     {
         public Vector2 Posicao { get; set; }
         public Texture2D Textura { get; set; }
