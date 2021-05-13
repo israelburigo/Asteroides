@@ -6,14 +6,12 @@ using NaBatalhaDoCangaco.Engine;
 using System;
 using System.Linq;
 using Asteroides.Entidades;
+using Asteroides.Engine;
 
 namespace NaBatalhaDoCangaco
 {
-    public class Main : Game
+    public class Main : MainGame
     {
-        public GraphicsDeviceManager Graphics { get; set; }
-        public SpriteBatch SpriteBatch { get; set; }
-        public static Random Random = new Random();
         public Player Player { get; set; }
         public GeradorMeteoro GeradorMeteoro { get; set; }
         public GUI Gui { get; set; }
@@ -21,14 +19,6 @@ namespace NaBatalhaDoCangaco
 
         public Main()
         {
-            IsMouseVisible = true;
-
-            Graphics = new GraphicsDeviceManager(this);
-            Content.RootDirectory = "Content";
-
-            //Graphics.SynchronizeWithVerticalRetrace = false;
-            //IsFixedTimeStep = false;
-
             GeradorMeteoro = new GeradorMeteoro(this);
 
             Player = new Player(this);
@@ -50,7 +40,7 @@ namespace NaBatalhaDoCangaco
 
         protected override void LoadContent()
         {
-            SpriteBatch = new SpriteBatch(GraphicsDevice);
+            base.LoadContent();
             Player.Texture = Content.Load<Texture2D>("2d/player");
             Gui.SetFont(Content.Load<SpriteFont>("fonts/arial20"));
         }

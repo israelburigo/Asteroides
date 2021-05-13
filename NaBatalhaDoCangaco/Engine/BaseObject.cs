@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Asteroides.Engine;
+using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -6,7 +7,7 @@ using System.Text;
 namespace NaBatalhaDoCangaco.Engine
 {
     public abstract class BaseObject<T> : GameComponent, IDrawable
-        where T : Game
+        where T : MainGame
     {
         protected T ThisGame;
 

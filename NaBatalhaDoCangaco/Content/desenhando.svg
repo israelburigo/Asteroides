@@ -25,15 +25,15 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="1.979899"
-     inkscape:cx="150.82482"
-     inkscape:cy="856.71165"
+     inkscape:zoom="3.959798"
+     inkscape:cx="91.686561"
+     inkscape:cy="879.09756"
      inkscape:document-units="mm"
      inkscape:current-layer="layer1"
      showgrid="false"
      inkscape:window-width="1920"
      inkscape:window-height="1017"
-     inkscape:window-x="-8"
+     inkscape:window-x="1912"
      inkscape:window-y="-8"
      inkscape:window-maximized="1" />
   <metadata
@@ -44,7 +44,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -87,6 +87,24 @@
        d="m 84.186823,87.519789 -5.278573,-1.937706 -5.345393,2.405425 -2.271789,2.605879 2.672694,4.677217 1.403165,2.672696 5.278575,-0.935445 3.541321,-2.739511 2.00452,-2.271792 -1.469983,-3.207234 z"
        id="path850"
        inkscape:connector-curvature="0"
+       inkscape:export-xdpi="94"
+       inkscape:export-ydpi="94" />
+    <circle
+       style="opacity:1;fill:none;fill-opacity:1;fill-rule:nonzero;stroke:#ffcc00;stroke-width:0.43000001;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke markers fill"
+       id="path817-1"
+       cx="23.820393"
+       cy="65.310738"
+       r="1.9019321"
+       inkscape:export-filename="C:\Users\israel.burigo\Documents\CURSO_JOGO\NaBatalhaDoCangaco\NaBatalhaDoCangaco\Content\2d\arma1.png"
+       inkscape:export-xdpi="94"
+       inkscape:export-ydpi="94" />
+    <circle
+       style="opacity:1;fill:none;fill-opacity:1;fill-rule:nonzero;stroke:#00ff00;stroke-width:0.43000001;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke markers fill"
+       id="path817-1-4"
+       cx="32.272793"
+       cy="65.477776"
+       r="1.9019321"
+       inkscape:export-filename="C:\Users\israel.burigo\Documents\CURSO_JOGO\NaBatalhaDoCangaco\NaBatalhaDoCangaco\Content\2d\arma2.png"
        inkscape:export-xdpi="94"
        inkscape:export-ydpi="94" />
   </g>

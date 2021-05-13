@@ -1,4 +1,5 @@
 ﻿using System;
+using Asteroides.Engine;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using NaBatalhaDoCangaco;
@@ -32,9 +33,9 @@ namespace Asteroides.Entidades
             {
                 Texture = Textura(tipo),
                 Posicao = origem,
-                Inercia = dir ?? Vector2.One.Rotate((float)Main.Random.NextDouble() * MathHelper.TwoPi),
-                Speed = Main.Random.Next(10, 100),
-                Rotacao = (float)Main.Random.NextDouble() / 20
+                Inercia = dir ?? Vector2.One.Rotate((float)RandomSingleton.Instance.NextDouble() * MathHelper.TwoPi),
+                Speed = RandomSingleton.Instance.Next(10, 100),
+                Rotacao = (float)RandomSingleton.Instance.NextDouble() / 20
             };
         }
 
@@ -58,7 +59,7 @@ namespace Asteroides.Entidades
 
             for (int i = 0; i < quant; i++)
             {
-                var index = Main.Random.Next(e.Length);
+                var index = RandomSingleton.Instance.Next(e.Length);
 
                 var pos = MontaPosicaoIncial();
                 var dir = MontaDirecao(pos);
@@ -96,9 +97,9 @@ namespace Asteroides.Entidades
         {
             var pos = new[]
             {
-                Main.Random.Next(1, 1000),
-                Main.Random.Next(1, ThisGame.Window.ClientBounds.Width - 1),
-                Main.Random.Next(1, ThisGame.Window.ClientBounds.Height - 1),
+                RandomSingleton.Instance.Next(1, 1000),
+                RandomSingleton.Instance.Next(1, ThisGame.Window.ClientBounds.Width - 1),
+                RandomSingleton.Instance.Next(1, ThisGame.Window.ClientBounds.Height - 1),
             };
 
             var origem = pos[0];

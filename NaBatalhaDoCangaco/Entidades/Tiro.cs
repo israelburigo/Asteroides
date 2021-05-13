@@ -1,4 +1,6 @@
 ﻿using System.Linq;
+using Asteroides.Engine;
+using Asteroides.Engine.Components;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using NaBatalhaDoCangaco;
@@ -48,10 +50,21 @@ namespace Asteroides.Entidades
 
             foreach (var meteoro in meteoros.Where(p => p.Contem(Posicao)).ToList())
             {
+                CriaParticulas(Posicao);
+
                 ThisGame.Components.Remove(this);
                 meteoro.Destruir();
             }
         }
 
+        private void CriaParticulas(Vector2 posicao)
+        {
+            //new ParticlesObject<Main>(Game)
+            //{
+            //    Quant = 10,
+            //    DuracaoDasParticulas = new MinMax(0.3f,0.5f),
+            //    Posicao = posicao,
+            //};
+        }
     }
 }
