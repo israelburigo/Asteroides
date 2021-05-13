@@ -42,7 +42,7 @@ namespace Asteroides.Entidades
         public override void Update(GameTime gameTime)
         {
             var dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
-            Posicao += Direcao * dt * 700;
+            Posicao += Direcao * dt * 100;
 
             if (Posicao.X > ThisGame.Window.ClientBounds.Width || Posicao.X < 0)
                 ThisGame.Components.Remove(this);

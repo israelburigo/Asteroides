@@ -6,7 +6,7 @@ namespace Asteroides.Entidades.Armas
     {
         public CanhaoRapido()
         {
-            Cor = Color.Blue;
+            Cor = Color.Yellow;
             TempoTiroPadrao = 0.1f;
             Municao = 100;
         }

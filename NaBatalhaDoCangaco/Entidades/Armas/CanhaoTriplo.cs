@@ -7,7 +7,7 @@ namespace Asteroides.Entidades.Armas
     {
         public CanhaoTriplo()
         {
-            Cor = Color.Red;
+            Cor = Color.Green;
             Municao = 50;
         }
 
