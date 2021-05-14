@@ -7,6 +7,7 @@ using System;
 using System.Linq;
 using Asteroides.Entidades;
 using Asteroides.Engine;
+using Asteroides.Arquivos;
 
 namespace NaBatalhaDoCangaco
 {
@@ -45,6 +46,13 @@ namespace NaBatalhaDoCangaco
             Graphics.ApplyChanges();
 
             Globals.GameWindow = Window;
+
+            if (System.IO.File.Exists("save.dat"))
+            {
+                var score = Globals.Deserialize<Score>("save.dat", Cripto.Decripta);
+                Player.Score = score ?? new Score();
+                Player.Score.Valor = 0;
+            }
         }
 
         protected override void LoadContent()
@@ -99,9 +107,12 @@ namespace NaBatalhaDoCangaco
         {
             Started = false;
 
-            if (Player.Score > Player.MaxScore)
-                Player.MaxScore = Player.Score;
-            Player.Score = 0;
+            if (Player.Score.Valor > Player.Score.Max)
+            {
+                Player.Score.Max = Player.Score.Valor;
+                Globals.Serialize("save.dat", Player.Score, Cripto.Encripta);
+            }
+            Player.Score.Valor = 0;
         }
     }
 }
