@@ -53,6 +53,7 @@ namespace NaBatalhaDoCangaco
 
             Globals.SpriteBatch = new SpriteBatch(GraphicsDevice);
 
+            Player.Texture = Content.Load<Texture2D>("2d/player");
             Gui.SetFont(Content.Load<SpriteFont>("fonts/arial20"));
         }
 

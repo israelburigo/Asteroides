@@ -8,19 +8,18 @@ using System.Text;
 
 namespace Asteroides.Engine.Components
 {
-    public class Particula<T> : ObjetoBase<T>
-        where T : Game
+    public class Particula : DrawableGameComponent
     {
-        private readonly Particulas<T> _parent;
+        private readonly Particulas _parent;
         private readonly Vector2 _direcao;        
         private readonly float _velocidade;
-        private readonly Texture2D _textura;
         private float _duracao;
         private Vector2 _posicao;
+        private Texture2D _textura;
 
         public bool Done { get { return _duracao <= 0; } }
 
-        public Particula(Game game, Particulas<T> parent) 
+        public Particula(Game game, Particulas parent) 
              : base(game)
         {
             game.Components.Add(this);

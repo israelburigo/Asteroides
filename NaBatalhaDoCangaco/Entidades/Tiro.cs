@@ -59,7 +59,7 @@ namespace Asteroides.Entidades
 
         private void CriaParticulas(Vector2 posicao)
         {
-            new Particulas<Main>(Game)
+            new Particulas(Game)
             {
                 Quant = new MinMax(5, 10),
                 DuracaoDasParticulas = new MinMax(0.5f, 1.0f),

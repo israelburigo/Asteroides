@@ -8,8 +8,7 @@ using System.Text;
 namespace Asteroides.Engine.Components
 { 
 
-    public class Particulas<T> : ObjetoBase<T>
-        where T : Game
+    public class Particulas : GameComponent
     {
         public Vector2 Posicao { get; set; }
         public Texture2D Textura { get; set; }
@@ -18,7 +17,7 @@ namespace Asteroides.Engine.Components
         public MinMax Velocidade { get; set; }        
         public MinMax Quant { get; set; }
 
-        private List<Particula<T>> _particulas = new List<Particula<T>>();
+        private List<Particula> _particulas = new List<Particula>();
 
         public Particulas(Game game)
             : base(game)
@@ -26,24 +25,17 @@ namespace Asteroides.Engine.Components
             game.Components.Add(this);
         }
        
-        public override void Draw(GameTime gameTime)
-        {
-            _particulas.ForEach(p => p.Draw(gameTime));
-        }
-
         public override void Update(GameTime gameTime)
         {
-            _particulas.ForEach(p => p.Update(gameTime));
             _particulas.RemoveAll(p => p.Done);
-
             if (_particulas.Count == 0)
-                ThisGame.Components.Remove(this);
+                Game.Components.Remove(this);
         }
 
         internal void Start()
         {
             for (int i = 0; i < Quant.RandomInt(); i++)
-                _particulas.Add(new Particula<T>(ThisGame, this));
+                _particulas.Add(new Particula(Game, this));
         }
     }
 }
