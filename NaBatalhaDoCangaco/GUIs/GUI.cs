@@ -38,8 +38,8 @@ namespace Asteroides.GUIs
         {
             var pl = ThisGame.Player;
 
-            Score = $"Score: {pl.Score}";
-            MaxScore = $"Max: {pl.MaxScore}";
+            Score = $"Score: {pl.Score.Valor}";
+            MaxScore = $"Max: {pl.Score.Max}";
 
             Start.Update(gameTime);
         }

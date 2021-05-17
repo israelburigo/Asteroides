@@ -38,7 +38,7 @@ namespace Asteroides.Entidades
         internal void Destruir()
         {
             ThisGame.Components.Remove(this);
-            ThisGame.Player.Score++;
+            ThisGame.Player.Score.Valor++;
 
             var gerador = ThisGame.GeradorMeteoro;
 

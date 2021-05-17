@@ -20,14 +20,13 @@ namespace Asteroides.Entidades
         public Vector2 Posicao { get; set; }
         public Vector2 Direcao { get; set; } = Vector2.UnitX;
         public Vector2 Inercia { get; set; } = Vector2.Zero;
-        public IArma Arma { get; set; } = new CanhaoTriplo();
+        public IArma Arma { get; set; } = new CanhaoSimples();
+        public Score Score { get; set; } = new Score();
 
         public float Aceleracao { get; set; } = 10;
 
-        public int Score { get; set; }
-        public int MaxScore { get; set; }
-
-        public Player(Game game) : base(game)
+        public Player(Game game) 
+            : base(game)
         {
         }
 
