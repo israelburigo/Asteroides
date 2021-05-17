@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Asteroides.Engine;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -90,10 +91,7 @@ namespace Asteroides.Entidades
 
         internal bool Contem(Vector2[] bounds)
         {
-            foreach (var item in bounds)
-                if (Contem(item))
-                    return true;
-            return false;
+            return bounds.Any(Contem);
         }
     }
 }

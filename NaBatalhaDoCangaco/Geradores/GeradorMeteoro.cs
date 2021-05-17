@@ -1,11 +1,12 @@
 ﻿using System;
 using Asteroides.Engine;
+using Asteroides.Entidades;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using NaBatalhaDoCangaco;
 using NaBatalhaDoCangaco.Engine.Extensions;
 
-namespace Asteroides.Entidades
+namespace Asteroides.Geradores
 {
     public class GeradorMeteoro
     {
@@ -80,7 +81,7 @@ namespace Asteroides.Entidades
 
             _tempoGeracao = 2f;
 
-            var valor = (ThisGame.Player.Score.Valor / 50) + 1;
+            var valor = ThisGame.Player.Score.Valor / 50 + 1;
             Gerar(valor);
         }
 

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Asteroides.Engine;
 using Asteroides.Entidades.Armas;
 using Microsoft.Xna.Framework;
@@ -13,14 +14,15 @@ namespace Asteroides.Entidades
     {
         public Player Player { get; private set; }
 
+        public EnumTipoItem TipoItem { get; private set; }
         public Texture2D Texture { get; private set; }
         public Vector2 Posicao { get; set; }
         public Vector2 Direcao { get; set; }
-        public float Rotacao { get; set; }
-        public EnumTipoItem TipoItem { get; set; }
-
-        public Item(Game game) : base(game)
+        
+        public Item(Game game, EnumTipoItem tpItem) 
+            : base(game)
         {
+            TipoItem = tpItem;
             Texture = game.Content.Load<Texture2D>("2d/arma");
             game.Components.Add(this);
         }
@@ -71,10 +73,7 @@ namespace Asteroides.Entidades
 
         internal bool Contem(Vector2[] bounds)
         {
-            foreach (var item in bounds)
-                if (Contem(item))
-                    return true;
-            return false;
+            return bounds.Any(Contem);
         }
 
         internal bool Contem(Vector2 v)

@@ -1,10 +1,11 @@
 ﻿using System;
 using Asteroides.Engine;
+using Asteroides.Entidades;
 using Microsoft.Xna.Framework;
 using NaBatalhaDoCangaco;
 using NaBatalhaDoCangaco.Engine.Extensions;
 
-namespace Asteroides.Entidades
+namespace Asteroides.Geradores
 {
     public class GeradorItem
     {
@@ -31,12 +32,10 @@ namespace Asteroides.Entidades
                 var pos = MontaPosicaoIncial();
                 var dir = MontaDirecao(pos);
 
-                new Item(ThisGame)
+                new Item(ThisGame, (EnumTipoItem)e.GetValue(index))
                 {
-                    TipoItem = (EnumTipoItem)e.GetValue(index),
                     Posicao = pos,
-                    Direcao = dir,
-                    Rotacao = (float)RandomSingleton.Instance.NextDouble() / 20
+                    Direcao = dir
                 };
             }
         }

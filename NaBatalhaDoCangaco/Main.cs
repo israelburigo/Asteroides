@@ -10,6 +10,7 @@ using Asteroides.Engine;
 using Asteroides.Arquivos;
 using Asteroides.Entidades.Armas;
 using Asteroides.Engine.Components;
+using Asteroides.Geradores;
 
 namespace NaBatalhaDoCangaco
 {
