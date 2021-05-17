@@ -61,8 +61,8 @@ namespace Asteroides.Entidades
 
             var dir = new Vector2(pl.Posicao.X - pos.X, pl.Posicao.Y - pos.Y);
             dir.Normalize();
-
-            return dir;
+            var ang = new MinMax(-90, 90).Random();
+            return dir.Rotate(MathHelper.ToRadians(ang));
         }
 
         private Vector2 MontaPosicaoIncial()
