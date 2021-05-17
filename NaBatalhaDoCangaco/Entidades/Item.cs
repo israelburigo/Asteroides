@@ -11,26 +11,17 @@ namespace Asteroides.Entidades
 {
     public class Item : ObjetoBase<Main>
     {
-        public Player Player { get; set; }
-        public Texture2D Texture { get; set; }
+        public Player Player { get; private set; }
+
+        public Texture2D Texture { get; private set; }
         public Vector2 Posicao { get; set; }
         public Vector2 Direcao { get; set; }
         public float Rotacao { get; set; }
         public EnumTipoItem TipoItem { get; set; }
 
-        public Item(Game game, EnumTipoItem tipoItem) : base(game)
+        public Item(Game game) : base(game)
         {
-            switch (tipoItem)
-            {
-                case EnumTipoItem.CanhaoRapido:
-                    Texture = game.Content.Load<Texture2D>("2d/arma1");
-                    break;
-                case EnumTipoItem.CamnhaoTriplo:
-                    Texture = game.Content.Load<Texture2D>("2d/arma2");
-                    break;
-                default: break;
-            }
-
+            Texture = game.Content.Load<Texture2D>("2d/arma");
             game.Components.Add(this);
         }
 
@@ -50,20 +41,14 @@ namespace Asteroides.Entidades
             if (Posicao.Y > ThisGame.Window.ClientBounds.Height || Posicao.Y < 0)
                 ThisGame.Components.Remove(this);
 
-
             if (Contem(Player.Bounds))
             {
                 switch (TipoItem)
                 {
-                    case EnumTipoItem.CanhaoRapido: 
-                        Player.Arma = new CanhaoRapido();
-                        break;
-                    case EnumTipoItem.CamnhaoTriplo:
-                        Player.Arma = new CanhaoTriplo();
-                        break;
+                    case EnumTipoItem.CanhaoRapido: Player.Arma = new CanhaoRapido(); break;
+                    case EnumTipoItem.CamnhaoTriplo: Player.Arma = new CanhaoTriplo(); break;
                     default: break;
                 }
-
                 ThisGame.Components.Remove(this);
             }
         }
@@ -73,7 +58,15 @@ namespace Asteroides.Entidades
             if (Texture == null)
                 return;
 
-            Globals.SpriteBatch.Draw(Texture, Posicao, null, Color.White, -Direcao.Angle(), new Vector2(Texture.Width / 2, Texture.Height / 2), 1f, SpriteEffects.None, 0);
+            var color = Color.White;
+            switch (TipoItem)
+            {
+                case EnumTipoItem.CanhaoRapido: color = Color.Yellow; break;
+                case EnumTipoItem.CamnhaoTriplo: color = Color.Green; break;
+                default: break;
+            }
+
+            Globals.SpriteBatch.Draw(Texture, Posicao, null, color, -Direcao.Angle(), new Vector2(Texture.Width / 2, Texture.Height / 2), 1f, SpriteEffects.None, 0);
         }
 
         internal bool Contem(Vector2[] bounds)

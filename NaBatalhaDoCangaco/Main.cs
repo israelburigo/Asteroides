@@ -8,6 +8,8 @@ using System.Linq;
 using Asteroides.Entidades;
 using Asteroides.Engine;
 using Asteroides.Arquivos;
+using Asteroides.Entidades.Armas;
+using Asteroides.Engine.Components;
 
 namespace NaBatalhaDoCangaco
 {
@@ -70,9 +72,10 @@ namespace NaBatalhaDoCangaco
             Started = true;
 
             Player.Posicao = new Vector2(Window.ClientBounds.Width / 2, Window.ClientBounds.Height / 2);
-
+            Player.Score.Valor = 0;
             Player.Inercia = Vector2.Zero;
             Player.Direcao = Vector2.UnitX;
+            Player.Arma = new CanhaoSimples();
 
             Components.OfType<Meteoro>().ToList().ForEach(p => Components.Remove(p));
 
@@ -107,12 +110,22 @@ namespace NaBatalhaDoCangaco
         {
             Started = false;
 
+            new Particulas(this)
+            {
+                Quant = new MinMax(100),
+                Angulo = new MinMax(0, 360),
+                DuracaoDasParticulas = new MinMax(1f, 3f),
+                Posicao = Player.Posicao,
+                Textura = Content.Load<Texture2D>("2d/particula"),
+                Velocidade = new MinMax(10, 100),
+                Color = Color.OrangeRed,
+            }.Start();
+
             if (Player.Score.Valor > Player.Score.Max)
             {
                 Player.Score.Max = Player.Score.Valor;
                 Globals.Serialize("save.dat", Player.Score, Cripto.Encripta);
-            }
-            Player.Score.Valor = 0;
+            }            
         }
     }
 }

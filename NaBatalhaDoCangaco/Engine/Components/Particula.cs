@@ -16,6 +16,7 @@ namespace Asteroides.Engine.Components
         private float _duracao;
         private Vector2 _posicao;
         private Texture2D _textura;
+        private Color _color;
 
         public bool Done { get { return _duracao <= 0; } }
 
@@ -33,6 +34,7 @@ namespace Asteroides.Engine.Components
             _duracao = _parent.DuracaoDasParticulas?.Random() ?? 1f;
             _direcao = Vector2.One.Rotate(MathHelper.ToRadians(angulo));
             _posicao = new Vector2(_parent.Posicao.X, _parent.Posicao.Y);
+            _color = _parent.Color ?? Color.White;
         }
 
         public override void Draw(GameTime gameTime)
@@ -40,7 +42,7 @@ namespace Asteroides.Engine.Components
             if (_textura == null)
                 return;
 
-            Globals.SpriteBatch.Draw(_textura, _posicao, Color.White);
+            Globals.SpriteBatch.Draw(_textura, _posicao, _color);
         }
 
         public override void Update(GameTime gameTime)

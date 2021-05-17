@@ -31,8 +31,9 @@ namespace Asteroides.Entidades
                 var pos = MontaPosicaoIncial();
                 var dir = MontaDirecao(pos);
 
-                new Item(ThisGame, (EnumTipoItem)e.GetValue(index))
+                new Item(ThisGame)
                 {
+                    TipoItem = (EnumTipoItem)e.GetValue(index),
                     Posicao = pos,
                     Direcao = dir,
                     Rotacao = (float)RandomSingleton.Instance.NextDouble() / 20

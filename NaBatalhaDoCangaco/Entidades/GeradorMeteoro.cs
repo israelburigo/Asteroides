@@ -80,7 +80,8 @@ namespace Asteroides.Entidades
 
             _tempoGeracao = 2f;
 
-            Gerar(1);
+            var valor = (ThisGame.Player.Score.Valor / 50) + 1;
+            Gerar(valor);
         }
 
         private Vector2 MontaDirecao(Vector2 pos)

@@ -16,6 +16,7 @@ namespace Asteroides.Engine.Components
         public MinMax DuracaoDasParticulas { get; set; }
         public MinMax Velocidade { get; set; }        
         public MinMax Quant { get; set; }
+        public Color? Color { get; set; }
 
         private List<Particula> _particulas = new List<Particula>();
 

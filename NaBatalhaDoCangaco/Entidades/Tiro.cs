@@ -66,7 +66,7 @@ namespace Asteroides.Entidades
                 Posicao = posicao,
                 Textura = ThisGame.Content.Load<Texture2D>("2d/particula"),
                 Angulo = new MinMax(0, 359),
-                Velocidade = new MinMax(10, 100),
+                Velocidade = new MinMax(10, 100),                
             }.Start();
         }
     }
