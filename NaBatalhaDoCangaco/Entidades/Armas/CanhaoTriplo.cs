@@ -7,6 +7,7 @@ namespace Asteroides.Entidades.Armas
     {
         public CanhaoTriplo()
         {
+            TempoTiroPadrao = 0.7f;
             Cor = Color.Green;
             Municao = 50;
         }
