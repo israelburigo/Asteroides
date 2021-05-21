@@ -12,6 +12,8 @@ using Asteroides.Entidades.Armas;
 using Asteroides.Engine.Components;
 using Asteroides.Geradores;
 using System.Collections.Generic;
+using RedeNeural.Models;
+using System.IO;
 
 namespace NaBatalhaDoCangaco
 {
@@ -53,12 +55,8 @@ namespace NaBatalhaDoCangaco
 
             Globals.GameWindow = Window;
 
-            //if (System.IO.File.Exists("save.dat"))
-            //{
-            //    var score = Globals.Deserialize<Score>("save.dat", Cripto.Decripta);
-            //    Player.Score = score ?? new Score();
-            //    Player.Score.Valor = 0;
-            //}
+           
+
         }
 
         protected override void LoadContent()
@@ -74,11 +72,14 @@ namespace NaBatalhaDoCangaco
         {
             Started = true;
 
-            //Player.Posicao = new Vector2(Window.ClientBounds.Width / 2, Window.ClientBounds.Height / 2);
-            //Player.Score.Valor = 0;
-            //Player.Inercia = Vector2.Zero;
-            //Player.Direcao = Vector2.UnitX;
-            //Player.Arma = new CanhaoSimples();
+            if (MelhorIA == null && File.Exists("melhorCerebro.dat"))
+            {
+                var cerebro = Globals.Deserialize<NeuralNetwork>("melhorCerebro.dat");
+                MelhorIA = new IA(this)
+                {
+                    Cerebro = cerebro
+                };
+            }
 
             for (int i = 0; i < 20; i++)
             {
@@ -146,13 +147,7 @@ namespace NaBatalhaDoCangaco
             MelhorIA = IAs.OrderByDescending(p => p.LifeTime * p.Score.Valor)
                           .First();
 
-            Globals.Serialize("melhorCerebro.dat", MelhorIA.Cerebro);
-
-            //if (Player.Score.Valor > Player.Score.Max)
-            //{
-            //    Player.Score.Max = Player.Score.Valor;
-            //    Globals.Serialize("save.dat", Player.Score, Cripto.Encripta);
-            //}            
+            Globals.Serialize("melhorCerebro.dat", MelhorIA.Cerebro.Synapses);                   
         }
     }
 }
