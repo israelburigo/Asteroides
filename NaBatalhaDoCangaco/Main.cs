@@ -27,6 +27,7 @@ namespace NaBatalhaDoCangaco
 
         public List<IA> IAs { get; set; } = new List<IA>();
         public IA MelhorIA { get; set; }
+        public int Geracao { get; set; }
 
         public Main()
         {
@@ -40,8 +41,6 @@ namespace NaBatalhaDoCangaco
 
             Gui = new GUI(this);
             Components.Add(Gui);
-
-            
         }
 
         protected override void Initialize()
@@ -54,8 +53,6 @@ namespace NaBatalhaDoCangaco
             Graphics.ApplyChanges();
 
             Globals.GameWindow = Window;
-
-           
 
         }
 
@@ -70,18 +67,17 @@ namespace NaBatalhaDoCangaco
 
         internal void Start()
         {
+            Geracao++;
             Started = true;
 
             if (MelhorIA == null && File.Exists("melhorCerebro.dat"))
             {
-                var cerebro = Globals.Deserialize<NeuralNetwork>("melhorCerebro.dat");
-                MelhorIA = new IA(this)
-                {
-                    Cerebro = cerebro
-                };
+                var sinapses = Globals.Deserialize<List<Synapse>>("melhorCerebro.dat");
+                MelhorIA = new IA(this);
+                MelhorIA.Cerebro.Synapses = sinapses;
             }
 
-            for (int i = 0; i < 20; i++)
+            for (int i = 0; i < 1; i++)
             {
                 var ia = new IA(this)
                 {
@@ -103,12 +99,12 @@ namespace NaBatalhaDoCangaco
 
             IAs = Components.OfType<IA>().ToList();
 
-            if (MelhorIA != null)
+            if (MelhorIA != null && MelhorIA.Pontos > 0)
                 new GeradorMutacao().Gerar(MelhorIA, IAs);
 
             Components.OfType<Meteoro>().ToList().ForEach(p => Components.Remove(p));
 
-            GeradorMeteoro.Gerar(10);
+            GeradorMeteoro.Gerar(1);
         }
 
         protected override void Update(GameTime gameTime)
@@ -118,7 +114,7 @@ namespace NaBatalhaDoCangaco
 
             base.Update(gameTime);
 
-            Window.Title = Components.Count.ToString();
+            Window.Title = $"Geracao: {Geracao}   MelhorIA = Pontos:{MelhorIA?.Score.Valor ?? 0} - LifeTime:{MelhorIA?.LifeTime ?? 0}s";
 
             GeradorMeteoro.Gerar(gameTime);
 
@@ -144,10 +140,17 @@ namespace NaBatalhaDoCangaco
             if (!IAs.Any())
                 return;
 
-            MelhorIA = IAs.OrderByDescending(p => p.LifeTime * p.Score.Valor)
+            var melhor = IAs.OrderByDescending(p => p.LifeTime * p.Score.Valor)
                           .First();
 
-            Globals.Serialize("melhorCerebro.dat", MelhorIA.Cerebro.Synapses);                   
+            if (melhor.Melhor(MelhorIA))
+                MelhorIA = melhor;
+
+            IAs.Clear();
+
+            Globals.Serialize("melhorCerebro.dat", MelhorIA.Cerebro.Synapses);
+
+            Start();
         }
     }
 }

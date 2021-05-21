@@ -1,5 +1,6 @@
 ﻿using Asteroides.Engine;
 using Asteroides.Engine.Components;
+using Asteroides.Engine.Extensions;
 using Asteroides.Entidades.Armas;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -25,8 +26,12 @@ namespace Asteroides.Entidades
         public IArma Arma { get; set; }
         public float Aceleracao { get; set; } = 10;
         public float LifeTime { get; set; }
+        public List<Sensor> Sensores { get; set; } = new List<Sensor>();
+        public int QuantSensores { get; set; } = 10;
+        public bool ShowSensors { get; set; }
 
         public NeuralNetwork Cerebro { get; set; }
+        public float Pontos { get { return LifeTime * Score.Valor; } }
 
         public IA(Game game) : base(game)
         {
@@ -37,19 +42,19 @@ namespace Asteroides.Entidades
                 ActivationType = EnumActivation.Relu
             };
 
-            Cerebro.Inputs.Add(new Neuron { Tag = "dist_x" });
-            Cerebro.Inputs.Add(new Neuron { Tag = "dist_y" });
-            Cerebro.Inputs.Add(new Neuron { Tag = "inercia_x" });
-            Cerebro.Inputs.Add(new Neuron { Tag = "inercia_y" });
-            Cerebro.Inputs.Add(new Neuron { Tag = "angulo" });
+            for (int i = 0; i < QuantSensores; i++)
+            {
+                Cerebro.Inputs.Add(new Neuron { Tag = $"sensor_{i}" });
+            }
 
-            Cerebro.Outputs.Add(new Neuron { Tag = "acelera" }); 
-            Cerebro.Outputs.Add(new Neuron { Tag = "re" }); 
-            Cerebro.Outputs.Add(new Neuron { Tag = "esq" }); 
-            Cerebro.Outputs.Add(new Neuron { Tag = "dir" }); 
-            Cerebro.Outputs.Add(new Neuron { Tag = "atira" }); 
+            Cerebro.Outputs.Add(new Neuron { Tag = "acelera" });            
+            Cerebro.Outputs.Add(new Neuron { Tag = "esq" });
+            Cerebro.Outputs.Add(new Neuron { Tag = "dir" });
+            Cerebro.Outputs.Add(new Neuron { Tag = "atira" });
+            Cerebro.Outputs.Add(new Neuron { Tag = "re" });
 
-            Cerebro.Hiddens.Add(new HiddenNeurons(10));            
+            Cerebro.Hiddens.Add(new HiddenNeurons(10));
+            Cerebro.Hiddens.Add(new HiddenNeurons(6));
 
             Cerebro.BuildSynapses();
         }
@@ -62,7 +67,10 @@ namespace Asteroides.Entidades
             if (Texture == null)
                 return;
 
-            Globals.SpriteBatch.Draw(Texture, Posicao, null, Arma.Cor, -Direcao.Angle(), new Vector2(Texture.Width / 2, Texture.Height / 2), 1f, SpriteEffects.None, 0);
+            if(ShowSensors)
+                Sensores.ForEach(p => Globals.SpriteBatch.DrawLine(Posicao, p.Linha, p.Ativo ? Color.Red : Color.White, 1));
+
+            Globals.SpriteBatch.Draw(Texture, Posicao, null, Arma.Cor, Direcao.Angle(), new Vector2(Texture.Width / 2, Texture.Height / 2), 1f, SpriteEffects.None, 0);
         }
 
         public override void Update(GameTime gameTime)
@@ -74,28 +82,27 @@ namespace Asteroides.Entidades
 
             LifeTime += dt;
 
+            ShowSensors = Keyboard.GetState().IsKeyDown(Keys.Space);
+
             var meteoros = ThisGame.Components.OfType<Meteoro>();
 
-            var dist = PegaDistMeteoroMaisProximo(meteoros);
-            
-            Cerebro.SetInput("angulo", -Direcao.Angle());
-            Cerebro.SetInput("inercia_y", Inercia.X);
-            Cerebro.SetInput("inercia_x", Inercia.Y);
-            Cerebro.SetInput("dist_x", dist.X);
-            Cerebro.SetInput("dist_y", dist.Y);
+            for (int i = 0; i < Sensores.Count; i++)
+            {
+                Cerebro.SetInput($"sensor_{i}", Sensores[i].Ativo ? Sensores[i].Distancia : 0);
+            }
 
             Cerebro.FeedForward();
 
-            var acelera = Cerebro.GetOutput("acelera")?.Value ?? 0;
-            var re = Cerebro.GetOutput("re")?.Value ?? 0;
+            var acelera = Cerebro.GetOutput("acelera")?.Value ?? 0;            
             var esq = Cerebro.GetOutput("esq")?.Value ?? 0;
             var dir = Cerebro.GetOutput("dir")?.Value ?? 0;
             var atira = Cerebro.GetOutput("atira")?.Value ?? 0;
+            var re = Cerebro.GetOutput("re")?.Value ?? 0;
 
             if (Arma.Municao <= 0)
                 Arma = new CanhaoSimples(this);
 
-            if(acelera > 0)
+            if (acelera > 0)
                 Inercia += Direcao * dt * Aceleracao;
 
             if (re > 0)
@@ -130,6 +137,26 @@ namespace Asteroides.Entidades
 
             Posicao += Inercia;
 
+            Sensores = new List<Sensor>();
+            for (int i = 0; i < QuantSensores; i++)
+            {  
+                var a = MathHelper.ToRadians(360 * i / QuantSensores);
+                var v1 = (Vector2.UnitX * 300).Rotate(a - angle);
+                Sensores.Add(new Sensor { Linha = v1 + Posicao });
+            }
+
+            Sensores.ForEach(p =>
+            {
+                p.Ativo = meteoros.Any(q =>
+                {
+                    var ret = p.Linha.IntersectCircle(Posicao, q.Posicao, q.Texture.Width / 2);
+                    if(ret.Item1)
+                        p.Distancia = Vector2.Distance(ret.Item2, Posicao);
+
+                    return p.Distancia > 0 && p.Distancia < Vector2.Distance(p.Linha, Posicao);
+                });
+            });
+
             if (meteoros.Any(p => p.Contem(Bounds)))
             {
                 new Particulas(Game)
@@ -147,30 +174,9 @@ namespace Asteroides.Entidades
             }
         }
 
-        private Vector2 PegaDistMeteoroMaisProximo(IEnumerable<Meteoro> meteoros)
+        internal bool Melhor(IA melhorIA)
         {
-            var m = meteoros.FirstOrDefault();
-            if (m == null)
-                return Vector2.Zero;
-
-            var dx = m.Posicao.X - Posicao.X;
-            var dy = m.Posicao.Y - Posicao.Y;
-            var dist = MathF.Sqrt(dx * dx + dy * dy);
-
-            var distMin = dist;
-            var ret = new Vector2(m.Posicao.X, m.Posicao.Y);
-
-            foreach (var meteoro in meteoros)
-            {
-                var raio = meteoro.Texture.Width / 2;
-                dx = meteoro.Posicao.X - Posicao.X;
-                dy = meteoro.Posicao.Y - Posicao.Y;
-                dist = MathF.Sqrt(dx * dx + dy * dy) - raio;
-                if(dist < distMin)
-                    ret = new Vector2(meteoro.Posicao.X, meteoro.Posicao.Y);
-            }
-
-            return ret;
-        }
+            return melhorIA == null || Pontos > melhorIA.Pontos;
+        }        
     }
 }
