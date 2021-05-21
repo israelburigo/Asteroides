@@ -4,7 +4,8 @@ namespace Asteroides.Entidades.Armas
 {
     public class CanhaoRapido : CanhaoSimples
     {
-        public CanhaoRapido()
+        public CanhaoRapido(PlayerBase pb)
+            :base(pb)
         {
             Cor = Color.Yellow;
             TempoTiroPadrao = 0.1f;

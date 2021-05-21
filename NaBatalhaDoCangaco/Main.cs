@@ -11,18 +11,20 @@ using Asteroides.Arquivos;
 using Asteroides.Entidades.Armas;
 using Asteroides.Engine.Components;
 using Asteroides.Geradores;
+using System.Collections.Generic;
 
 namespace NaBatalhaDoCangaco
 {
     public class Main : Game
     {
-        public Player Player { get; set; }
+        //public Player Player { get; set; }
         public GeradorMeteoro GeradorMeteoro { get; set; }
-        public GeradorItem GeradorItem { get; set; }
         public GUI Gui { get; set; }
         public bool Started { get; private set; }
-
         public GraphicsDeviceManager Graphics { get; set; }
+
+        public List<IA> IAs { get; set; } = new List<IA>();
+        public IA MelhorIA { get; set; }
 
         public Main()
         {
@@ -30,13 +32,14 @@ namespace NaBatalhaDoCangaco
             Content.RootDirectory = "Content";
 
             GeradorMeteoro = new GeradorMeteoro(this);
-            GeradorItem = new GeradorItem(this);
 
-            Player = new Player(this);
-            Components.Add(Player);
+            //Player = new Player(this);
+           // Components.Add(Player);
 
             Gui = new GUI(this);
             Components.Add(Gui);
+
+            
         }
 
         protected override void Initialize()
@@ -50,12 +53,12 @@ namespace NaBatalhaDoCangaco
 
             Globals.GameWindow = Window;
 
-            if (System.IO.File.Exists("save.dat"))
-            {
-                var score = Globals.Deserialize<Score>("save.dat", Cripto.Decripta);
-                Player.Score = score ?? new Score();
-                Player.Score.Valor = 0;
-            }
+            //if (System.IO.File.Exists("save.dat"))
+            //{
+            //    var score = Globals.Deserialize<Score>("save.dat", Cripto.Decripta);
+            //    Player.Score = score ?? new Score();
+            //    Player.Score.Valor = 0;
+            //}
         }
 
         protected override void LoadContent()
@@ -63,8 +66,7 @@ namespace NaBatalhaDoCangaco
             base.LoadContent();
 
             Globals.SpriteBatch = new SpriteBatch(GraphicsDevice);
-
-            Player.Texture = Content.Load<Texture2D>("2d/player");
+    
             Gui.SetFont(Content.Load<SpriteFont>("fonts/arial20"));
         }
 
@@ -72,11 +74,36 @@ namespace NaBatalhaDoCangaco
         {
             Started = true;
 
-            Player.Posicao = new Vector2(Window.ClientBounds.Width / 2, Window.ClientBounds.Height / 2);
-            Player.Score.Valor = 0;
-            Player.Inercia = Vector2.Zero;
-            Player.Direcao = Vector2.UnitX;
-            Player.Arma = new CanhaoSimples();
+            //Player.Posicao = new Vector2(Window.ClientBounds.Width / 2, Window.ClientBounds.Height / 2);
+            //Player.Score.Valor = 0;
+            //Player.Inercia = Vector2.Zero;
+            //Player.Direcao = Vector2.UnitX;
+            //Player.Arma = new CanhaoSimples();
+
+            for (int i = 0; i < 20; i++)
+            {
+                var ia = new IA(this)
+                {
+                    Texture = Content.Load<Texture2D>("2d/player"),
+                    Posicao = new Vector2(Window.ClientBounds.Width / 2, Window.ClientBounds.Height / 2),
+                    Score = new Score(),
+                    Inercia = Vector2.Zero,
+                    Direcao = Vector2.UnitX,
+                };
+
+                var cor = new MinMax(0, 1f);
+
+                ia.Arma = new CanhaoSimples(ia)
+                {
+                    Cor = new Color(cor.Random(), cor.Random(), cor.Random())
+                };
+                Components.Add(ia);
+            }            
+
+            IAs = Components.OfType<IA>().ToList();
+
+            if (MelhorIA != null)
+                new GeradorMutacao().Gerar(MelhorIA, IAs);
 
             Components.OfType<Meteoro>().ToList().ForEach(p => Components.Remove(p));
 
@@ -93,7 +120,9 @@ namespace NaBatalhaDoCangaco
             Window.Title = Components.Count.ToString();
 
             GeradorMeteoro.Gerar(gameTime);
-            GeradorItem.Gerar(gameTime);
+
+            if (!Components.OfType<IA>().Any())
+                End();
         }
 
         protected override void Draw(GameTime gameTime)
@@ -111,22 +140,19 @@ namespace NaBatalhaDoCangaco
         {
             Started = false;
 
-            new Particulas(this)
-            {
-                Quant = new MinMax(100),
-                Angulo = new MinMax(0, 360),
-                DuracaoDasParticulas = new MinMax(1f, 3f),
-                Posicao = Player.Posicao,
-                Textura = Content.Load<Texture2D>("2d/particula"),
-                Velocidade = new MinMax(10, 100),
-                Color = Color.OrangeRed,
-            }.Start();
+            if (!IAs.Any())
+                return;
 
-            if (Player.Score.Valor > Player.Score.Max)
-            {
-                Player.Score.Max = Player.Score.Valor;
-                Globals.Serialize("save.dat", Player.Score, Cripto.Encripta);
-            }            
+            MelhorIA = IAs.OrderByDescending(p => p.LifeTime * p.Score.Valor)
+                          .First();
+
+            Globals.Serialize("melhorCerebro.dat", MelhorIA.Cerebro);
+
+            //if (Player.Score.Valor > Player.Score.Max)
+            //{
+            //    Player.Score.Max = Player.Score.Valor;
+            //    Globals.Serialize("save.dat", Player.Score, Cripto.Encripta);
+            //}            
         }
     }
 }

@@ -10,9 +10,11 @@ namespace Asteroides.Entidades.Armas
         public int Municao { get; set; }
         public Color Cor { get; set; }
         public float TempoTiroPadrao { get; set; }
+        public PlayerBase PlayerBase { get; set; }
 
-        public CanhaoSimples()
+        public CanhaoSimples(PlayerBase pb)
         {
+            PlayerBase = pb;
             Cor = Color.White;
             Municao = Int32.MaxValue;
             TempoTiroPadrao = TempoTiro = 0.3f;
@@ -34,7 +36,7 @@ namespace Asteroides.Entidades.Armas
 
         public virtual void GeraTiro(Game game, Vector2 posicao, Vector2 direcao)
         {
-            new Tiro(game)
+            new Tiro(game, PlayerBase)
             {
                 Posicao = posicao,
                 Direcao = direcao

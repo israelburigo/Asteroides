@@ -81,15 +81,14 @@ namespace Asteroides.Geradores
 
             _tempoGeracao = 2f;
 
-            var valor = ThisGame.Player.Score.Valor / 50 + 1;
-            Gerar(valor);
+            Gerar(1);
         }
 
         private Vector2 MontaDirecao(Vector2 pos)
         {
-            var pl = ThisGame.Player;
+            var pl = new Vector2(Globals.GameWindow.ClientBounds.Width / 2, Globals.GameWindow.ClientBounds.Height / 2);
 
-            var dir = new Vector2(pl.Posicao.X - pos.X, pl.Posicao.Y - pos.Y);
+            var dir = new Vector2(pl.X - pos.X, pl.Y - pos.Y);
             dir.Normalize();
 
             return dir;

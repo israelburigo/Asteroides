@@ -5,7 +5,8 @@ namespace Asteroides.Entidades.Armas
 {
     public class CanhaoTriplo : CanhaoSimples
     {
-        public CanhaoTriplo()
+        public CanhaoTriplo(PlayerBase pb)
+            : base(pb)
         {
             TempoTiroPadrao = 0.7f;
             Cor = Color.Green;
@@ -16,7 +17,7 @@ namespace Asteroides.Entidades.Armas
         {
             for (var i = -1; i <= 1; i++)
             {
-                new Tiro(game)
+                new Tiro(game, PlayerBase)
                 {
                     Posicao = posicao,
                     Direcao = direcao.Rotate(MathHelper.ToRadians(20 * i))

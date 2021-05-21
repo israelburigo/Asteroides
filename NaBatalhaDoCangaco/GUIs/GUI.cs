@@ -23,8 +23,8 @@ namespace Asteroides.GUIs
 
         public override void Draw(GameTime gameTime)
         {
-            Globals.SpriteBatch.DrawString(Font, Score, new Vector2(10, 10), Color.White);
-            Globals.SpriteBatch.DrawString(Font, MaxScore, new Vector2(10, 50), Color.White);
+            //Globals.SpriteBatch.DrawString(Font, Score, new Vector2(10, 10), Color.White);
+            //Globals.SpriteBatch.DrawString(Font, MaxScore, new Vector2(10, 50), Color.White);
 
             Start.Draw(gameTime);
         }
@@ -36,10 +36,10 @@ namespace Asteroides.GUIs
 
         public override void Update(GameTime gameTime)
         {
-            var pl = ThisGame.Player;
+            //var pl = ThisGame.Player;
 
-            Score = $"Score: {pl.Score.Valor}";
-            MaxScore = $"Max: {pl.Score.Max}";
+            //Score = $"Score: {pl.Score.Valor}";
+            //MaxScore = $"Max: {pl.Score.Max}";
 
             Start.Update(gameTime);
         }

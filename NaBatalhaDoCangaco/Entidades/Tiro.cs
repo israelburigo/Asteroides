@@ -11,15 +11,17 @@ namespace Asteroides.Entidades
 {
     public class Tiro : ObjetoBase<Main>
     {
-        public Player Player { get; set; }
+        public PlayerBase Dono { get; set; }
         public Vector2 Posicao { get; set; }
         public Vector2 Direcao { get; set; }
         public Texture2D Texture { get; set; }
 
-        public Tiro(Game game) : base(game)
+        public Tiro(Game game, PlayerBase dono) : base(game)
         {
             Texture = game.Content.Load<Texture2D>("2d/tiro");
             game.Components.Add(this);
+
+            Dono = dono;
         }
 
         public override void Draw(GameTime gameTime)
@@ -28,11 +30,6 @@ namespace Asteroides.Entidades
                 return;
 
             Globals.SpriteBatch.Draw(Texture, Posicao, null, Color.White, -Direcao.Angle(), new Vector2(Texture.Width / 2, Texture.Height / 2), 1f, SpriteEffects.None, 0);
-        }
-
-        public override void Initialize()
-        {
-            Player = ThisGame.Player;
         }
 
         public override void Update(GameTime gameTime)
@@ -51,7 +48,7 @@ namespace Asteroides.Entidades
             foreach (var meteoro in meteoros.Where(p => p.Contem(Posicao)).ToList())
             {
                 CriaParticulas(Posicao);
-
+                Dono.Score.Valor++;
                 ThisGame.Components.Remove(this);
                 meteoro.Destruir();
             }
