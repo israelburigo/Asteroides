@@ -27,7 +27,7 @@ namespace Asteroides.Entidades
         public float Aceleracao { get; set; } = 10;
         public float LifeTime { get; set; }
         public List<Sensor> Sensores { get; set; } = new List<Sensor>();
-        public int QuantSensores { get; set; } = 10;
+        public int QuantSensores { get; set; } = 50;
         public bool ShowSensors { get; set; }
 
         public NeuralNetwork Cerebro { get; set; }
@@ -47,14 +47,14 @@ namespace Asteroides.Entidades
                 Cerebro.Inputs.Add(new Neuron { Tag = $"sensor_{i}" });
             }
 
-            Cerebro.Outputs.Add(new Neuron { Tag = "acelera" });            
+            Cerebro.Outputs.Add(new Neuron { Tag = "acelera" });
             Cerebro.Outputs.Add(new Neuron { Tag = "esq" });
             Cerebro.Outputs.Add(new Neuron { Tag = "dir" });
             Cerebro.Outputs.Add(new Neuron { Tag = "atira" });
             Cerebro.Outputs.Add(new Neuron { Tag = "re" });
 
+            Cerebro.Hiddens.Add(new HiddenNeurons(20));
             Cerebro.Hiddens.Add(new HiddenNeurons(10));
-            Cerebro.Hiddens.Add(new HiddenNeurons(6));
 
             Cerebro.BuildSynapses();
         }
@@ -67,10 +67,10 @@ namespace Asteroides.Entidades
             if (Texture == null)
                 return;
 
-            if(ShowSensors)
+            if (ShowSensors)
                 Sensores.ForEach(p => Globals.SpriteBatch.DrawLine(Posicao, p.Linha, p.Ativo ? Color.Red : Color.White, 1));
 
-            Globals.SpriteBatch.Draw(Texture, Posicao, null, Arma.Cor, Direcao.Angle(), new Vector2(Texture.Width / 2, Texture.Height / 2), 1f, SpriteEffects.None, 0);
+            Globals.SpriteBatch.Draw(Texture, Posicao, null, Arma.Cor, -Direcao.Angle(), new Vector2(Texture.Width / 2, Texture.Height / 2), 1f, SpriteEffects.None, 0);
         }
 
         public override void Update(GameTime gameTime)
@@ -93,25 +93,31 @@ namespace Asteroides.Entidades
 
             Cerebro.FeedForward();
 
-            var acelera = Cerebro.GetOutput("acelera")?.Value ?? 0;            
+            var acelera = Cerebro.GetOutput("acelera")?.Value ?? 0;
             var esq = Cerebro.GetOutput("esq")?.Value ?? 0;
             var dir = Cerebro.GetOutput("dir")?.Value ?? 0;
             var atira = Cerebro.GetOutput("atira")?.Value ?? 0;
             var re = Cerebro.GetOutput("re")?.Value ?? 0;
 
+            var keys = Keyboard.GetState().GetPressedKeys();
+
             if (Arma.Municao <= 0)
                 Arma = new CanhaoSimples(this);
 
             if (acelera > 0)
+                //if(keys.Contains(Keys.Up))
                 Inercia += Direcao * dt * Aceleracao;
 
             if (re > 0)
+                //if (keys.Contains(Keys.Down))
                 Inercia -= Direcao * dt * Aceleracao / 5;
 
             if (esq > 0)
+                //if (keys.Contains(Keys.Left))
                 Direcao = Direcao.Rotate(0.1f);
 
             if (dir > 0)
+                //if (keys.Contains(Keys.Right))
                 Direcao = Direcao.Rotate(-0.1f);
 
             if (Posicao.X > ThisGame.Window.ClientBounds.Width)
@@ -139,9 +145,9 @@ namespace Asteroides.Entidades
 
             Sensores = new List<Sensor>();
             for (int i = 0; i < QuantSensores; i++)
-            {  
+            {
                 var a = MathHelper.ToRadians(360 * i / QuantSensores);
-                var v1 = (Vector2.UnitX * 300).Rotate(a - angle);
+                var v1 = (Vector2.UnitX * 300).Rotate(a + angle);
                 Sensores.Add(new Sensor { Linha = v1 + Posicao });
             }
 
@@ -149,11 +155,45 @@ namespace Asteroides.Entidades
             {
                 p.Ativo = meteoros.Any(q =>
                 {
-                    var ret = p.Linha.IntersectCircle(Posicao, q.Posicao, q.Texture.Width / 2);
-                    if(ret.Item1)
-                        p.Distancia = Vector2.Distance(ret.Item2, Posicao);
+                    var dsm = Vector2.Distance(p.Linha, q.Posicao) - q.Raio;
+                    var diam = Vector2.Distance(Posicao, q.Posicao) - q.Raio;
+                    var ds = Vector2.Distance(Posicao, p.Linha);
 
-                    return p.Distancia > 0 && p.Distancia < Vector2.Distance(p.Linha, Posicao);
+                    var dds = dsm + diam;
+
+                    p.Distancia = 0;
+                    if (dds < ds)
+                        p.Distancia = dds;
+
+                    return dds < ds;
+
+                    //var ret = p.Linha.IntersectCircle(Posicao, q.Posicao, q.Texture.Width / 2);
+                    //if (ret.Item1 < 2)
+                    //    return false;
+
+                    //if(ret.Item1 == 2)
+                    //{
+                    //    var v = ret.Item2;
+                    //    if (Vector2.Distance(ret.Item3, p.Linha) < Vector2.Distance(ret.Item2, p.Linha))
+                    //        v = ret.Item3;
+
+                    //    var tamLinha = Vector2.Distance(p.Linha, Posicao);
+
+                    //    tamLinha + dist
+
+                    //    if (dist1 < tamLinha)
+                    //    {
+                    //        p.Distancia = dist1;
+                    //        return true;
+                    //    }
+                    //    else if (dist2 < tamLinha)
+                    //    {
+                    //        p.Distancia = dist2;
+                    //        return true;
+                    //    }
+                    //}
+
+                    return false;
                 });
             });
 
@@ -177,6 +217,6 @@ namespace Asteroides.Entidades
         internal bool Melhor(IA melhorIA)
         {
             return melhorIA == null || Pontos > melhorIA.Pontos;
-        }        
+        }
     }
 }

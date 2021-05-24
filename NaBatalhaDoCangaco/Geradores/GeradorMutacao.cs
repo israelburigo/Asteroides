@@ -15,7 +15,7 @@ namespace Asteroides.Geradores
             {
                 ia.Cerebro.Synapses.ForEach(syn =>
                 {
-                    var variacao = 0.01f;
+                    var variacao = 0.05f;
                     var min = melhorIA.Cerebro.Synapses.First(p => p.Id == syn.Id).Weight * (1 - variacao);
                     var max = melhorIA.Cerebro.Synapses.First(p => p.Id == syn.Id).Weight * (1 + variacao);
                     syn.Weight = new MinMax(min, max).Random();

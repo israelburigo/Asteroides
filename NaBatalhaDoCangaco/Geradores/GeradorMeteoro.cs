@@ -81,7 +81,7 @@ namespace Asteroides.Geradores
 
             _tempoGeracao = 2f;
 
-            Gerar(1);
+            Gerar(3);
         }
 
         private Vector2 MontaDirecao(Vector2 pos)

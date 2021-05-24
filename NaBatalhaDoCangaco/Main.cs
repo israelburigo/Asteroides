@@ -77,7 +77,7 @@ namespace NaBatalhaDoCangaco
                 MelhorIA.Cerebro.Synapses = sinapses;
             }
 
-            for (int i = 0; i < 1; i++)
+            for (int i = 0; i < 5; i++)
             {
                 var ia = new IA(this)
                 {
@@ -104,7 +104,7 @@ namespace NaBatalhaDoCangaco
 
             Components.OfType<Meteoro>().ToList().ForEach(p => Components.Remove(p));
 
-            GeradorMeteoro.Gerar(1);
+            GeradorMeteoro.Gerar(10);
         }
 
         protected override void Update(GameTime gameTime)
@@ -140,7 +140,7 @@ namespace NaBatalhaDoCangaco
             if (!IAs.Any())
                 return;
 
-            var melhor = IAs.OrderByDescending(p => p.LifeTime * p.Score.Valor)
+            var melhor = IAs.OrderByDescending(p => p.Pontos)
                           .First();
 
             if (melhor.Melhor(MelhorIA))

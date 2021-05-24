@@ -25,6 +25,7 @@ namespace Asteroides.Entidades
         public Texture2D Texture { get; set; }
         protected EnumTipoMeteoro Tipo { get; set; }
         public float Rotacao { get; set; }
+        public float Raio { get { return Texture.Width / 2; } }
 
         public Meteoro(Game game) : base(game)
         {
@@ -51,14 +52,7 @@ namespace Asteroides.Entidades
 
         internal bool Contem(Vector2 v)
         {
-            var raio = Texture.Width / 2;
-
-            var dx = Posicao.X - v.X;
-            var dy = Posicao.Y - v.Y;
-
-            var dist = MathF.Sqrt(dx * dx + dy * dy);
-
-            return dist < raio;
+            return Vector2.Distance(Posicao, v) < Raio;
         }    
 
         public override void Update(GameTime gameTime)

@@ -23,7 +23,7 @@ namespace NaBatalhaDoCangaco.Engine.Extensions
             return v;
         }
 
-        public static Tuple<bool, Vector2> IntersectCircle(this Vector2 p2, Vector2 p1, Vector2 c, float r)
+        public static Tuple<int, Vector2, Vector2> IntersectCircle(this Vector2 p2, Vector2 p1, Vector2 c, float r)
         {
             var dx = p2.X - p1.X;
             var dy = p2.Y - p1.Y;
@@ -35,13 +35,22 @@ namespace NaBatalhaDoCangaco.Engine.Extensions
             var det = B * B - 4 * A * C;
 
             if ((A <= 0.0000001) || (det < 0))
-                return Tuple.Create(false, Vector2.Zero);
+                return Tuple.Create(0, Vector2.Zero, Vector2.Zero);
 
-            var t = det == 0 
-                ? -B / (2 * A)
-                : (-B + MathF.Sqrt(det)) / (2 * A);
-
-            return Tuple.Create(true, new Vector2(p1.X + t * dx, p1.Y + t * dy));
+            if(det == 0)
+            {
+                var t = -B / (2 * A);
+                var v = new Vector2(p1.X + t * dx, p1.Y + t * dy);
+                return Tuple.Create(1, v, Vector2.Zero);
+            }
+            else
+            {
+                var t1 = (-B + MathF.Sqrt(det)) / (2 * A);
+                var t2 = (-B - MathF.Sqrt(det)) / (2 * A);
+                var v1 = new Vector2(p1.X + t1 * dx, p1.Y + t1 * dy);
+                var v2 = new Vector2(p1.X + t2 * dx, p1.Y + t2 * dy);
+                return Tuple.Create(2, v1, v2);
+            }
         }
 
         public static float Angle(this Vector2 v)
