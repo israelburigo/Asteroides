@@ -4,9 +4,6 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using NaBatalhaDoCangaco;
 using NaBatalhaDoCangaco.Engine;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Asteroides.GUIs
 {
@@ -20,6 +17,7 @@ namespace Asteroides.GUIs
         public ButtonStart(Game game)
             : base(game)
         {
+            game.Components.Add(this);
         }
 
         public override void Draw(GameTime gameTime)

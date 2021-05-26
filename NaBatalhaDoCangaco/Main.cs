@@ -31,12 +31,6 @@ namespace NaBatalhaDoCangaco
 
             GeradorMeteoro = new GeradorMeteoro(this);
             GeradorItem = new GeradorItem(this);
-
-            Player = new Player(this);
-            Components.Add(Player);
-
-            Gui = new GUI(this);
-            Components.Add(Gui);
         }
 
         protected override void Initialize()
@@ -47,6 +41,9 @@ namespace NaBatalhaDoCangaco
             Graphics.PreferredBackBufferHeight = 1000;
 
             Graphics.ApplyChanges();
+
+            Player = new Player(this);
+            Gui = new GUI(this);
 
             Globals.GameWindow = Window;
 
@@ -61,11 +58,7 @@ namespace NaBatalhaDoCangaco
         protected override void LoadContent()
         {
             base.LoadContent();
-
             Globals.SpriteBatch = new SpriteBatch(GraphicsDevice);
-
-            Player.Texture = Content.Load<Texture2D>("2d/player");
-            Gui.SetFont(Content.Load<SpriteFont>("fonts/arial20"));
         }
 
         internal void Start()

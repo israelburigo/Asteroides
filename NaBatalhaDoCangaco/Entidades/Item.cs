@@ -18,6 +18,7 @@ namespace Asteroides.Entidades
         public Texture2D Texture { get; private set; }
         public Vector2 Posicao { get; set; }
         public Vector2 Direcao { get; set; }
+        public float Raio => Texture.Width / 2;
         
         public Item(Game game, EnumTipoItem tpItem) 
             : base(game)
@@ -78,14 +79,8 @@ namespace Asteroides.Entidades
 
         internal bool Contem(Vector2 v)
         {
-            var raio = Texture.Width / 2;
-
-            var dx = Posicao.X - v.X;
-            var dy = Posicao.Y - v.Y;
-
-            var dist = MathF.Sqrt(dx * dx + dy * dy);
-
-            return dist < raio;
+            var dist = Vector2.Distance(v, Posicao);
+            return dist < Raio;
         }
     }
 

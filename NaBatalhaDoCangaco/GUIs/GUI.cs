@@ -3,9 +3,6 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using NaBatalhaDoCangaco;
 using NaBatalhaDoCangaco.Engine;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Asteroides.GUIs
 {
@@ -19,20 +16,18 @@ namespace Asteroides.GUIs
 
         public GUI(Game game) : base(game)
         {
+            ThisGame.Components.Add(this);
+            Start = new ButtonStart(Game);
+            SetFont(ThisGame.Content.Load<SpriteFont>("fonts/arial20"));
         }
 
         public override void Draw(GameTime gameTime)
         {
             Globals.SpriteBatch.DrawString(Font, Score, new Vector2(10, 10), Color.White);
             Globals.SpriteBatch.DrawString(Font, MaxScore, new Vector2(10, 50), Color.White);
-
-            Start.Draw(gameTime);
         }
 
-        public override void Initialize()
-        {
-            Start = new ButtonStart(Game);
-        }
+       
 
         public override void Update(GameTime gameTime)
         {
@@ -40,8 +35,6 @@ namespace Asteroides.GUIs
 
             Score = $"Score: {pl.Score.Valor}";
             MaxScore = $"Max: {pl.Score.Max}";
-
-            Start.Update(gameTime);
         }
 
         internal void SetFont(SpriteFont spriteFont)

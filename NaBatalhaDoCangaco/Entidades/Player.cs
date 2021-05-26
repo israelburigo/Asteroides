@@ -28,6 +28,9 @@ namespace Asteroides.Entidades
         public Player(Game game) 
             : base(game)
         {
+            ThisGame.Components.Add(this);
+            Texture = ThisGame.Content.Load<Texture2D>("2d/player");
+            Bounds  = new Vector2[3];
         }
 
         public override void Draw(GameTime gameTime)
@@ -79,6 +82,7 @@ namespace Asteroides.Entidades
                 new Vector2(Posicao.X, Posicao.Y + Texture.Height/2).Rotate(angle, Posicao),
                 new Vector2(Posicao.X - Texture.Width/2, Posicao.Y - Texture.Height/2 ).Rotate(angle, Posicao),
                 new Vector2(Posicao.X + Texture.Width/2, Posicao.Y - Texture.Height/2 ).Rotate(angle, Posicao),
+                new Vector2(Posicao.X, Posicao.Y).Rotate(angle, Posicao),
             };
 
             if (Keyboard.GetState().IsKeyDown(Keys.Space))
