@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Design;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -22,7 +23,7 @@ namespace NaBatalhaDoCangaco.Engine.Extensions
             v.Y = (float)(sin * tx + cos * ty) + origin.Y;
             return v;
         }
-
+        
         public static Tuple<int, Vector2, Vector2> IntersectCircle(this Vector2 p2, Vector2 p1, Vector2 c, float r)
         {
             var dx = p2.X - p1.X;

@@ -27,7 +27,7 @@ namespace Asteroides.Entidades
         public float Aceleracao { get; set; } = 10;
         public float LifeTime { get; set; }
         public List<Sensor> Sensores { get; set; } = new List<Sensor>();
-        public int QuantSensores { get; set; } = 50;
+        public int QuantSensores { get; set; } = 20;
         public bool ShowSensors { get; set; }
 
         public NeuralNetwork Cerebro { get; set; }
@@ -39,8 +39,14 @@ namespace Asteroides.Entidades
 
             Cerebro = new NeuralNetwork(RandomSingleton.Instance)
             {
-                ActivationType = EnumActivation.Relu
+                ActivationType = EnumActivation.Sigmoid
             };
+
+            Cerebro.Inputs.Add(new Neuron { Tag = "direcao_x" });
+            Cerebro.Inputs.Add(new Neuron { Tag = "direcao_y" });
+            Cerebro.Inputs.Add(new Neuron { Tag = "inercia_x" });
+            Cerebro.Inputs.Add(new Neuron { Tag = "inercia_y" });
+            Cerebro.Inputs.Add(new Neuron { Tag = "tempo_tiro" });
 
             for (int i = 0; i < QuantSensores; i++)
             {
@@ -57,6 +63,7 @@ namespace Asteroides.Entidades
             Cerebro.Hiddens.Add(new HiddenNeurons(10));
 
             Cerebro.BuildSynapses();
+
         }
 
         public override void Draw(GameTime gameTime)
@@ -86,6 +93,12 @@ namespace Asteroides.Entidades
 
             var meteoros = ThisGame.Components.OfType<Meteoro>();
 
+            Cerebro.SetInput("direcao_x", Direcao.X);
+            Cerebro.SetInput("direcao_y", Direcao.Y);
+            Cerebro.SetInput("inercia_x", Inercia.X);
+            Cerebro.SetInput("inercia_y", Inercia.Y);
+            Cerebro.SetInput("tempo_tiro", Arma.TempoTiro);
+
             for (int i = 0; i < Sensores.Count; i++)
             {
                 Cerebro.SetInput($"sensor_{i}", Sensores[i].Ativo ? Sensores[i].Distancia : 0);
@@ -104,19 +117,19 @@ namespace Asteroides.Entidades
             if (Arma.Municao <= 0)
                 Arma = new CanhaoSimples(this);
 
-            if (acelera > 0)
+            if (acelera > 0.5)
                 //if(keys.Contains(Keys.Up))
                 Inercia += Direcao * dt * Aceleracao;
 
-            if (re > 0)
+            if (re > 0.5)
                 //if (keys.Contains(Keys.Down))
                 Inercia -= Direcao * dt * Aceleracao / 5;
 
-            if (esq > 0)
+            if (esq > 0.5)
                 //if (keys.Contains(Keys.Left))
                 Direcao = Direcao.Rotate(0.1f);
 
-            if (dir > 0)
+            if (dir > 0.5)
                 //if (keys.Contains(Keys.Right))
                 Direcao = Direcao.Rotate(-0.1f);
 
@@ -138,7 +151,7 @@ namespace Asteroides.Entidades
                 new Vector2(Posicao.X + Texture.Width/2, Posicao.Y - Texture.Height/2 ).Rotate(angle, Posicao),
             };
 
-            if (atira > 0)
+            if (atira > 0.5)
                 Arma.Atira(ThisGame, gameTime, Bounds.First(), Direcao);
 
             Posicao += Inercia;
@@ -155,43 +168,47 @@ namespace Asteroides.Entidades
             {
                 p.Ativo = meteoros.Any(q =>
                 {
-                    var dsm = Vector2.Distance(p.Linha, q.Posicao) - q.Raio;
-                    var diam = Vector2.Distance(Posicao, q.Posicao) - q.Raio;
-                    var ds = Vector2.Distance(Posicao, p.Linha);
-
-                    var dds = dsm + diam;
-
-                    p.Distancia = 0;
-                    if (dds < ds)
-                        p.Distancia = dds;
-
-                    return dds < ds;
-
-                    //var ret = p.Linha.IntersectCircle(Posicao, q.Posicao, q.Texture.Width / 2);
-                    //if (ret.Item1 < 2)
-                    //    return false;
-
-                    //if(ret.Item1 == 2)
+                    //if (p.Linha.X < 0)
                     //{
-                    //    var v = ret.Item2;
-                    //    if (Vector2.Distance(ret.Item3, p.Linha) < Vector2.Distance(ret.Item2, p.Linha))
-                    //        v = ret.Item3;
-
-                    //    var tamLinha = Vector2.Distance(p.Linha, Posicao);
-
-                    //    tamLinha + dist
-
-                    //    if (dist1 < tamLinha)
-                    //    {
-                    //        p.Distancia = dist1;
-                    //        return true;
-                    //    }
-                    //    else if (dist2 < tamLinha)
-                    //    {
-                    //        p.Distancia = dist2;
-                    //        return true;
-                    //    }
+                    //    p.Distancia = Vector2.Distance(Posicao, new Vector2(0, Posicao.Y));
+                    //    return true;
                     //}
+
+                    //if (p.Linha.Y < 0)
+                    //{
+                    //    p.Distancia = Vector2.Distance(Posicao, new Vector2(Posicao.X, 0));
+                    //    return true;
+                    //}
+
+                    //if (p.Linha.X > Globals.GameWindow.ClientBounds.Width)
+                    //{
+                    //    p.Distancia = Vector2.Distance(Posicao, new Vector2(Globals.GameWindow.ClientBounds.Width, Posicao.Y));
+                    //    return true;
+                    //}
+
+                    //if (p.Linha.Y > Globals.GameWindow.ClientBounds.Height)
+                    //{
+                    //    p.Distancia = Vector2.Distance(Posicao, new Vector2(Posicao.X, Globals.GameWindow.ClientBounds.Height));
+                    //    return true;
+                    //}
+
+                    var ret = p.Linha.IntersectCircle(Posicao, q.Posicao, q.Texture.Width / 2);
+                    if (ret.Item1 == 2)
+                    {
+                        var pontoInter = ret.Item2;
+                        if (Vector2.Distance(ret.Item3, Posicao) < Vector2.Distance(ret.Item2, Posicao))
+                            pontoInter = ret.Item3;
+
+                        var tamLinha = Vector2.Distance(Posicao, p.Linha);
+                        var dlp = Vector2.Distance(p.Linha, pontoInter);
+                        var dpp = Vector2.Distance(Posicao, pontoInter);
+
+                        if (dpp < tamLinha && dlp <= tamLinha)
+                        {
+                            p.Distancia = dpp;
+                            return true;
+                        }
+                    }
 
                     return false;
                 });
@@ -199,16 +216,16 @@ namespace Asteroides.Entidades
 
             if (meteoros.Any(p => p.Contem(Bounds)))
             {
-                new Particulas(Game)
-                {
-                    Quant = new MinMax(100),
-                    Angulo = new MinMax(0, 360),
-                    DuracaoDasParticulas = new MinMax(1f, 3f),
-                    Posicao = Posicao,
-                    Textura = ThisGame.Content.Load<Texture2D>("2d/particula"),
-                    Velocidade = new MinMax(10, 100),
-                    Color = Color.OrangeRed,
-                }.Start();
+                //new Particulas(Game)
+                //{
+                //    Quant = new MinMax(100),
+                //    Angulo = new MinMax(0, 360),
+                //    DuracaoDasParticulas = new MinMax(1f, 3f),
+                //    Posicao = Posicao,
+                //    Textura = ThisGame.Content.Load<Texture2D>("2d/particula"),
+                //    Velocidade = new MinMax(10, 100),
+                //    Color = Color.OrangeRed,
+                //}.Start();
 
                 ThisGame.Components.Remove(this);
             }

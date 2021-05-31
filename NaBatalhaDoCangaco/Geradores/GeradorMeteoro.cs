@@ -81,7 +81,7 @@ namespace Asteroides.Geradores
 
             _tempoGeracao = 2f;
 
-            Gerar(3);
+            Gerar(2);
         }
 
         private Vector2 MontaDirecao(Vector2 pos)
@@ -99,8 +99,8 @@ namespace Asteroides.Geradores
             var pos = new[]
             {
                 RandomSingleton.Instance.Next(1, 1000),
-                RandomSingleton.Instance.Next(1, ThisGame.Window.ClientBounds.Width - 1),
-                RandomSingleton.Instance.Next(1, ThisGame.Window.ClientBounds.Height - 1),
+                RandomSingleton.Instance.Next(1, Globals.GameWindow.ClientBounds.Width - 1),
+                RandomSingleton.Instance.Next(1, Globals.GameWindow.ClientBounds.Height - 1),
             };
 
             var origem = pos[0];
