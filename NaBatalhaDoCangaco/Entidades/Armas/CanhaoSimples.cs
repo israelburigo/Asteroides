@@ -18,7 +18,7 @@ namespace Asteroides.Entidades.Armas
             TempoTiroPadrao = TempoTiro = 0.3f;
         }
 
-        public void Atira(Game game, GameTime gameTime, Vector2 posicao, Vector2 direcao)
+        public void Atira(Game game, GameTime gameTime, Vector2[] posicoes, Vector2 direcao)
         {
             var dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
@@ -29,16 +29,20 @@ namespace Asteroides.Entidades.Armas
 
             TempoTiro = TempoTiroPadrao;
 
-            GeraTiro(game, posicao, direcao);
+            GeraTiro(game, posicoes, direcao);
         }
 
-        public virtual void GeraTiro(Game game, Vector2 posicao, Vector2 direcao)
+        public virtual void GeraTiro(Game game, Vector2[] posicao, Vector2 direcao)
         {
-            new Tiro(game)
+            foreach (var item in posicao)
             {
-                Posicao = posicao,
-                Direcao = direcao
-            };
+                new Tiro(game)
+                {
+                    Posicao = item,
+                    Direcao = direcao
+                }; 
+            }
+           
         }
 
         public void Reset()

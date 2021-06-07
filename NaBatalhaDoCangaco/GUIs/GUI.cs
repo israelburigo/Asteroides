@@ -6,7 +6,7 @@ using NaBatalhaDoCangaco.Engine;
 
 namespace Asteroides.GUIs
 {
-    public class GUI : ObjetoBase<Main>
+    public class GUI : DrawableGameComponent
     {
         public SpriteFont Font { get; set; }
         public string Score { get; set; }
@@ -16,9 +16,9 @@ namespace Asteroides.GUIs
 
         public GUI(Game game) : base(game)
         {
-            ThisGame.Components.Add(this);
+            game.Components.Add(this);
             Start = new ButtonStart(Game);
-            SetFont(ThisGame.Content.Load<SpriteFont>("fonts/arial20"));
+            SetFont(game.Content.Load<SpriteFont>("fonts/arial20"));
         }
 
         public override void Draw(GameTime gameTime)
@@ -27,11 +27,9 @@ namespace Asteroides.GUIs
             Globals.SpriteBatch.DrawString(Font, MaxScore, new Vector2(10, 50), Color.White);
         }
 
-       
-
         public override void Update(GameTime gameTime)
         {
-            var pl = ThisGame.Player;
+            var pl = (Game as Main).Player;
 
             Score = $"Score: {pl.Score.Valor}";
             MaxScore = $"Max: {pl.Score.Max}";

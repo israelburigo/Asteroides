@@ -10,7 +10,6 @@ namespace Asteroides.Engine
     public class Globals
     {
         public static SpriteBatch SpriteBatch;
-        public static GameWindow GameWindow;
 
         public static void Serialize<T>(string path, T obj, Action<byte[]> serializer = null)
         {

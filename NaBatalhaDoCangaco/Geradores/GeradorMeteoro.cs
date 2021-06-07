@@ -2,118 +2,102 @@
 using Asteroides.Engine;
 using Asteroides.Entidades;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using NaBatalhaDoCangaco;
 using NaBatalhaDoCangaco.Engine.Extensions;
 
 namespace Asteroides.Geradores
 {
-    public class GeradorMeteoro
+    public class GeradorMeteoro : GameComponent
     {
-        private float _tempoGeracao;
+        public float Tempo { get; set; } = 2f;
 
-        public Main ThisGame { get; set; }
-
-        public GeradorMeteoro(Main game)
+        public GeradorMeteoro(Game game) 
+            : base(game)
         {
-            ThisGame = game;
+             game.Components.Add(this);
         }
 
-        internal void Gerar(int quant, EnumTipoMeteoro tipo, Vector2 origem, Vector2? dir = null)
+        public override void Update(GameTime gameTime)
         {
-            if (!ThisGame.Started)
+            if(!(Game as Main).Started)
                 return;
+
+            var dt = gameTime.GetDelta();
+
+            if ((Tempo -= dt) > 0)
+                return;
+
+            Tempo = 2f;
+
+            Gerar(1);
+        }
+
+        public void Gerar(int quant)
+        {
+            while(quant-- > 0)
+                Gerar();
+        }  
+        public void Gerar(int quant, EnumTipoMeteoro tipo, Vector2 posicao)
+        {
+            var ang = new MinMax(0, 359);
 
             for (int i = 0; i < quant; i++)
-                ThisGame.Components.Add(Gerar(tipo, origem, dir));
-        }
+                Gerar(posicao, tipo, ang.Random());
+        }  
 
-        private IGameComponent Gerar(EnumTipoMeteoro tipo, Vector2 origem, Vector2? dir = null)
+        private void Gerar(Vector2? posOrig = null , EnumTipoMeteoro? tipo = null, float? ang = null)
         {
-            return new Meteoro(ThisGame, tipo)
-            {
-                Texture = Textura(tipo),
-                Posicao = origem,
-                Inercia = dir ?? Vector2.One.Rotate((float)RandomSingleton.Instance.NextDouble() * MathHelper.TwoPi),
-                Speed = RandomSingleton.Instance.Next(10, 100),
-                Rotacao = (float)RandomSingleton.Instance.NextDouble() / 20
-            };
-        }
+            var rot = new MinMax(-5, 5).Random();
+            var vel = new MinMax(30f, 100f).Random();
 
-        private Texture2D Textura(EnumTipoMeteoro tipo)
-        {
-            switch (tipo)
+            Vector2 pos;
+            if (posOrig.HasValue)
             {
-                case EnumTipoMeteoro.Grande: return ThisGame.Content.Load<Texture2D>("2d/meteorao");
-                case EnumTipoMeteoro.Medio: return ThisGame.Content.Load<Texture2D>("2d/meteoro");
-                case EnumTipoMeteoro.Pequeno: return ThisGame.Content.Load<Texture2D>("2d/meteorinho");
-                default: return null;
+                pos = posOrig.Value;
             }
-        }
-
-        internal void Gerar(int quant)
-        {
-            if (!ThisGame.Started)
-                return;
-
-            var e = Enum.GetValues(typeof(EnumTipoMeteoro));
-
-            for (int i = 0; i < quant; i++)
-            {
-                var index = RandomSingleton.Instance.Next(e.Length);
-
-                var pos = MontaPosicaoIncial();
-                var dir = MontaDirecao(pos);
-
-                Gerar(1, (EnumTipoMeteoro)e.GetValue(index), pos, dir);
-            }
-        }
-
-        internal void Gerar(GameTime gameTime)
-        {
-            if (!ThisGame.Started)
-                return;
-
-            var dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
-
-            if ((_tempoGeracao -= dt) > 0)
-                return;
-
-            _tempoGeracao = 2f;
-
-            var valor = ThisGame.Player.Score.Valor / 50 + 1;
-            Gerar(valor);
-        }
-
-        private Vector2 MontaDirecao(Vector2 pos)
-        {
-            var pl = ThisGame.Player;
-
-            var dir = new Vector2(pl.Posicao.X - pos.X, pl.Posicao.Y - pos.Y);
-            dir.Normalize();
-
-            return dir;
-        }
-
-        private Vector2 MontaPosicaoIncial()
-        {
-            var pos = new[]
-            {
-                RandomSingleton.Instance.Next(1, 1000),
-                RandomSingleton.Instance.Next(1, ThisGame.Window.ClientBounds.Width - 1),
-                RandomSingleton.Instance.Next(1, ThisGame.Window.ClientBounds.Height - 1),
-            };
-
-            var origem = pos[0];
-
-            if (origem > 750)
-                return new Vector2(pos[1], 1);
-            else if (origem > 500)
-                return new Vector2(pos[1], ThisGame.Window.ClientBounds.Height - 1);
-            else if (origem > 250)
-                return new Vector2(1, pos[2]);
             else
-                return new Vector2(ThisGame.Window.ClientBounds.Width - 1, pos[2]);
+            {
+                var bordaInfSup = new MinMax(0, Game.Window.ClientBounds.Width).RandomInt();
+                var bordaEsqDir = new MinMax(0, Game.Window.ClientBounds.Height).RandomInt();
+
+                var cantos = new MinMax(0, 3).RandomInt();
+
+                switch (cantos)
+                {
+                    case 0: pos = new Vector2(bordaInfSup, 0); break;
+                    case 1: pos = new Vector2(bordaInfSup, Game.Window.ClientBounds.Height); break;
+                    case 2: pos = new Vector2(0, bordaEsqDir); break;
+                    case 3: pos = new Vector2(Game.Window.ClientBounds.Width, bordaEsqDir); break;
+                    default: pos = Vector2.Zero; break;
+                }
+            }
+
+            var values = Enum.GetValues(typeof(EnumTipoMeteoro));
+            var index = new MinMax(0, values.Length - 1).RandomInt();
+            var tipoM = (EnumTipoMeteoro)values.GetValue(index);
+
+            var pl = (Game as Main).Player;
+
+            var inercia = GeradorInercia(pos, pl.Posicao);
+            if (ang.HasValue)
+                inercia = inercia.Rotate(MathHelper.ToRadians(ang.Value));
+
+            new Meteoro(Game, tipo ?? tipoM)
+            {
+                Posicao = new Vector2(pos.X, pos.Y),
+                Rotacao = MathHelper.ToRadians(rot),
+                Velocidade = vel,
+                Inercia = inercia
+            };
+        }
+
+        private Vector2 GeradorInercia(Vector2 pos, Vector2 plPos)
+        {
+            var dx = plPos.X - pos.X;
+            var dy = plPos.Y - pos.Y;
+            var ine = new Vector2(dx, dy);
+            ine.Normalize();
+            return ine;
         }
     }
 }

@@ -37,15 +37,12 @@ namespace NaBatalhaDoCangaco
         {
             base.Initialize();
 
-            Graphics.PreferredBackBufferWidth = 1000;
-            Graphics.PreferredBackBufferHeight = 1000;
-
+            Graphics.PreferredBackBufferWidth = 826;
+            Graphics.PreferredBackBufferHeight = 640;
             Graphics.ApplyChanges();
 
             Player = new Player(this);
             Gui = new GUI(this);
-
-            Globals.GameWindow = Window;
 
             if (System.IO.File.Exists("save.dat"))
             {
@@ -57,6 +54,7 @@ namespace NaBatalhaDoCangaco
 
         protected override void LoadContent()
         {
+
             base.LoadContent();
             Globals.SpriteBatch = new SpriteBatch(GraphicsDevice);
         }
@@ -85,7 +83,6 @@ namespace NaBatalhaDoCangaco
 
             Window.Title = Components.Count.ToString();
 
-            GeradorMeteoro.Gerar(gameTime);
             GeradorItem.Gerar(gameTime);
         }
 

@@ -7,7 +7,7 @@ using NaBatalhaDoCangaco.Engine;
 
 namespace Asteroides.GUIs
 {
-    public class ButtonStart : ObjetoBase<Main>
+    public class ButtonStart : DrawableGameComponent
     {
         public SpriteFont Font;
         public Rectangle Bounds { get; set; }
@@ -22,7 +22,7 @@ namespace Asteroides.GUIs
 
         public override void Draw(GameTime gameTime)
         {
-            if (ThisGame.Started)
+            if ((Game as Main).Started)
                 return;
 
             if (_blink < 0.4)
@@ -30,8 +30,8 @@ namespace Asteroides.GUIs
 
             var txt = "Press ENTER";
 
-            var w = ThisGame.Window.ClientBounds.Width / 2;
-            var h = ThisGame.Window.ClientBounds.Height / 2;
+            var w = Game.Window.ClientBounds.Width / 2;
+            var h = Game.Window.ClientBounds.Height / 2;
             var size = Font.MeasureString(txt);
             var pos = new Vector2(w - size.X / 2, h - size.Y / 2);
             Globals.SpriteBatch.DrawString(Font, txt, pos, Color.White);
@@ -39,7 +39,7 @@ namespace Asteroides.GUIs
 
         public override void Update(GameTime gameTime)
         {
-            if (ThisGame.Started)
+            if ((Game as Main).Started)
                 return;
 
             var dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
@@ -48,7 +48,7 @@ namespace Asteroides.GUIs
                 _blink = 0.8f;
 
             if (Keyboard.GetState().IsKeyDown(Keys.Enter))
-                ThisGame.Start();             
+                (Game as Main).Start();             
         }
     }
 }

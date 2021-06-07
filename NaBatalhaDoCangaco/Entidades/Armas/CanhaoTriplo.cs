@@ -12,15 +12,19 @@ namespace Asteroides.Entidades.Armas
             Municao = 50;
         }
 
-        public override void GeraTiro(Game game, Vector2 posicao, Vector2 direcao)
+        public override void GeraTiro(Game game, Vector2[] posicoes, Vector2 direcao)
         {
             for (var i = -1; i <= 1; i++)
             {
-                new Tiro(game)
+                foreach (var posicao in posicoes)
                 {
-                    Posicao = posicao,
-                    Direcao = direcao.Rotate(MathHelper.ToRadians(20 * i))
-                };
+                     new Tiro(game)
+                    {
+                        Posicao = posicao,
+                        Direcao = direcao.Rotate(MathHelper.ToRadians(20 * i))
+                    }; 
+                }
+              
             }
         }
     }

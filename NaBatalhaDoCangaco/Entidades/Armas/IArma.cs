@@ -8,7 +8,7 @@ namespace Asteroides.Entidades.Armas
         float TempoTiro { get; set; }
         int Municao { get; set; }
         Color Cor { get; set; }
-        void Atira(Game game, GameTime gameTime, Vector2 posicao, Vector2 direcao);
+        void Atira(Game game, GameTime gameTime, Vector2[] posicoes, Vector2 direcao);
         void Reset();
     }
 }

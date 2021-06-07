@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Asteroides.Engine;
 using Asteroides.Entidades.Armas;
@@ -10,10 +11,9 @@ using NaBatalhaDoCangaco.Engine.Extensions;
 
 namespace Asteroides.Entidades
 {
-    public class Item : ObjetoBase<Main>
+    public class Item : DrawableGameComponent
     {
         public Player Player { get; private set; }
-
         public EnumTipoItem TipoItem { get; private set; }
         public Texture2D Texture { get; private set; }
         public Vector2 Posicao { get; set; }
@@ -30,7 +30,7 @@ namespace Asteroides.Entidades
 
         public override void Initialize()
         {
-            Player = ThisGame.Player;
+            Player = (Game as Main).Player;
         }
 
         public override void Update(GameTime gameTime)
@@ -38,11 +38,11 @@ namespace Asteroides.Entidades
             var dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
             Posicao += Direcao * dt * 100;
 
-            if (Posicao.X > ThisGame.Window.ClientBounds.Width || Posicao.X < 0)
-                ThisGame.Components.Remove(this);
+            if (Posicao.X > Game.Window.ClientBounds.Width || Posicao.X < 0)
+                Game.Components.Remove(this);
 
-            if (Posicao.Y > ThisGame.Window.ClientBounds.Height || Posicao.Y < 0)
-                ThisGame.Components.Remove(this);
+            if (Posicao.Y > Game.Window.ClientBounds.Height || Posicao.Y < 0)
+                Game.Components.Remove(this);
 
             if (Contem(Player.Bounds))
             {
@@ -52,7 +52,7 @@ namespace Asteroides.Entidades
                     case EnumTipoItem.CamnhaoTriplo: Player.Arma = new CanhaoTriplo(); break;
                     default: break;
                 }
-                ThisGame.Components.Remove(this);
+                Game.Components.Remove(this);
             }
         }
 
@@ -72,7 +72,7 @@ namespace Asteroides.Entidades
             Globals.SpriteBatch.Draw(Texture, Posicao, null, color, -Direcao.Angle(), new Vector2(Texture.Width / 2, Texture.Height / 2), 1f, SpriteEffects.None, 0);
         }
 
-        internal bool Contem(Vector2[] bounds)
+        internal bool Contem(List<Vector2> bounds)
         {
             return bounds.Any(Contem);
         }
